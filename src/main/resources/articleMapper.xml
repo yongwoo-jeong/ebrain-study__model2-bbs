@@ -5,6 +5,6 @@
 <mapper namespace="article.articleMapper">
   <select id="selectArticleAll" resultType="article.Article">
     SELECT *
-    FROM post
+    FROM article
   </select>
 </mapper>

@@ -1,5 +1,6 @@
 import DB.DBUtil;
 import article.Article;
+import article.ArticleDAO;
 import java.io.*;
 import java.util.List;
 import javax.servlet.http.*;
@@ -17,15 +18,16 @@ public class MainServlet extends HttpServlet {
 		String conPath = request.getContextPath();
 		String command = uri.substring(conPath.length());
 		System.out.println(command);
-
+		try {
+			ArticleDAO ad = (ArticleDAO) new ArticleDAO().selectArticleAll();
+			System.out.println(ad);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		if(command.equals("/searchArticles.do")){
 			PrintWriter writer = response.getWriter();
 			writer.println("<html><head></head><body>");
-			List<Article> arts = new DBUtil().getAllArticles();
-			if(arts==null){
-				System.out.println("NO DB");
-			}
-			System.out.println(arts);
+
 			writer.println("We are in"+command);
 			writer.println("</body></html>");
 		}
