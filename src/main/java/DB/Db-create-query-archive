@@ -1,0 +1,39 @@
+CREATE TABLE `article` (
+                           `article_id`	INT(11) NOT NULL auto_increment,
+                           `title`	VARCHAR(100)	NOT NULL,
+                           `writer`	VARCHAR(4)	NOT NULL,
+                           `password`	VARCHAR(15)	NOT NULL,
+                           `view`	INT(11)	NOT NULL DEFAULT 0,
+                           `content`	TEXT	NOT NULL,
+                           `created_at`	DATETIME	NOT NULL,
+                           `modified_at`	DATETIME	NULL,
+                           `category_id` INT(11)	NOT NULL,
+                           primary key (`article_id`),
+                           foreign key (`category_id`) references category (`category_id`)
+#                        만약 카테고리 ID가 삭제된다면? 일단 null로 만들기
+);
+
+CREATE TABLE `comment` (
+                           `comment_id`	INT(11) NOT NULL auto_increment,
+                           `content`	VARCHAR(255)	NOT NULL,
+                           `created_at`	DATETIME	NOT NULL,
+                           `article_id`	INT(11)	NOT NULL,
+                            primary key (`comment_id`),
+                            foreign key (`article_id`) references article (`article_id`)
+);
+
+CREATE TABLE `category` (
+                            `category_id`	INT(11)  NOT NULL,
+                            `name`	VARCHAR(30)	NOT NULL,
+                            primary key (`category_id`)
+);
+
+CREATE TABLE `file` (
+                        `file_uuid`	INT(11) NOT NULL,
+                        `name_on_server`	VARCHAR(100)	NULL,
+                        `name_original`	VARCHAR(100)	NOT NULL,
+                        `article_id`	INT(11)	NOT NULL,
+                        primary key (`file_uuid`),
+                        foreign key (`article_id`) references article (`article_id`)
+);
+

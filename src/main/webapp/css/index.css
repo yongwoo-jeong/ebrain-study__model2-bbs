@@ -1,0 +1,119 @@
+@import "reset.css";
+
+.container{
+  margin: 50px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title{
+  margin: 20px 0;
+  font-size: 28px;
+}
+
+.search_nav {
+  margin: 10px 0;
+  padding: 10px 0;
+  display: flex;
+  border: rgba(0,0,0,0.5) 1px dotted;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.date_select_div{
+  display: flex;
+  flex-direction: row;
+}
+
+.category_select_div{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category_select_div select{
+  width: 50px;
+  height: 20px;
+}
+
+.search_input_div{
+  display: flex;
+}
+
+.search_input_div input[type='text']{
+  width: 250px;
+  height: 20px;
+}
+
+
+.search_outcome{
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.post_container{
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.post_outline{
+  font-weight: bold;
+  display: flex;
+  width: 100%;
+  height: 30px;
+  justify-content: space-evenly;
+  align-items: center;
+  border-top: 1px solid black;
+  border-bottom: 2px solid black;
+}
+
+
+.post{
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-bottom: 1px solid black;
+}
+
+.post_category{
+  width: 20px;
+  margin-left: -16px;
+}
+
+svg{
+  width: 15px;
+  height: 15px;
+}
+
+.post span:nth-child(2) {
+  width: 5%;
+}
+
+.post_title {
+  width: 40%;
+  color: inherit;
+  margin-left: 40px;
+}
+
+.pagination{
+  width: 200px;
+  height: 30px;
+  margin-top: 50px;
+}
+
+.button{
+  background-color: rgba(0,0,0,0.75);
+  border: none;
+  color: gainsboro;
+}
+
+.upload_button{
+  margin-top: 40px;
+  width: 70px;
+  height: 30px;
+}
