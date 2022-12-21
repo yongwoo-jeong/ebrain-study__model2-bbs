@@ -2,7 +2,7 @@
 
 #### JSP, 자바 서블릿, JDBC, 마리아DB를 활용해 게시판구현하기
 
-기능
+### 기능
 
 - [ ] 홈페이지 게시글 전체보기
 
@@ -22,7 +22,7 @@
 
   
 
-to know
+### 공부할 것
 
 - [x] 자바 클래스패스 
 - [ ] 멀티파트 폼데이터 동작 과정
@@ -31,4 +31,14 @@ to know
   - [ ] 크로스사이트스크립팅
 - [ ] 자바의 call by refrence
   - [ ] Primitive type, Reference type
-- [ ] 체크 예외(Checked Exception)와 언체크 예외(Unchecked Exception)
+ - [ ] 체크 예외(Checked Exception)와 언체크 예외(Unchecked Exception)  
+  
+  
+  
+#### 어려웠던 부분 (원인파악필요)
+- Servlet 프로젝트 생성
+  - 인텔리제이 프로젝트를 생성할때 java EE servlet, web을 추가해주어야 정상적으로 진행가능했다.
+- MyBatis config xml 작성할 때 드라이버를
+  - org.mariadb.jdbc:mariadb-java-client:3.0.6로 입력해 드라이버세팅 불가했다.
+  - org.mariadb.jdbc.Driver 로 고쳐주면서 해결
+- Logger 인스턴스로 콘솔에 로그띄워지지가 않음.
