@@ -58,7 +58,7 @@
             // 첫 접속으로 articles 가 불러와지지 않았을때
 			if(articles == null){ %>
                 <%-- 서블릿에서 받아올수있도록 getArticles.action으로 포워딩           --%>
-                <jsp:forward page="/getArticles.action" />
+                <jsp:forward page="/selectArticles.action" />
             <%} %>
             <% for(Article article : articles) {
         %>

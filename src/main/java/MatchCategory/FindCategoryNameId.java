@@ -11,11 +11,11 @@ public class FindCategoryNameId {
 
 	public Integer findCategoryIdFn(String category){
 		if(Objects.equals(category,"JAVA")) {
-			category_id = 2;
+			category_id = 1;
 		} else if (Objects.equals(category,"Javascript")) {
-			category_id = 3;
+			category_id = 2;
 		} else if(Objects.equals(category, "Database")) {
-			category_id = 4;
+			category_id = 3;
 		} else {
 			System.out.println("Category ID out of range.");
 		}
@@ -23,11 +23,11 @@ public class FindCategoryNameId {
 	}
 
 	public String findCategoryName(Integer categoryId) {
-		if( categoryId == 2 ) {
+		if( categoryId == 1 ) {
 			category = "JAVA";
-		} else if (categoryId == 3) {
+		} else if (categoryId == 2) {
 			category = "Javascript";
-		} else if (categoryId == 4) {
+		} else if (categoryId == 3) {
 			category = "Database";
 		} else{
 			category = "Wrong category";
