@@ -7,9 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%--<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>--%>
     <link rel="stylesheet" href="css/index.css">
     <meta charset="UTF-8" />
     <title>게시판 - 목록</title>
@@ -18,9 +15,11 @@
 <div class="container">
     <header class="title"><h1>자유 게시판 - 목록</h1></header>
     <div class="search_nav">
-        <%-- 날짜 박스 구현 --%>
         <div class="date_select_div">
             <span>등록일</span>
+            <input type="date" value="2022-12-01"/>
+            <span>~</span>
+            <input type="date" value="2022-12-20"/>
         </div>
         <div class="category_select_div">
             <div class="category_drop_down">
@@ -61,8 +60,7 @@
                 <%-- 서블릿에서 받아올수있도록 getArticles.action으로 포워딩           --%>
                 <jsp:forward page="/getArticles.action" />
             <%} %>
-            <%System.out.println(articles.get(0).getTitle());
-            for(Article article : articles) {
+            <% for(Article article : articles) {
         %>
         <div class="post">
             <span class="post_category"><%= article.getCategoryId() %></span>
@@ -83,7 +81,7 @@
         <% } %>
     </div>
     <div class="pagination"></div>
-    <button class="button upload_button" type="button" onclick="location.href='upload.jsp'">등록</button>
+    <button class="button upload_button" type="button" onclick="location.href='newArticleInput.jsp'">등록</button>
 </div>
 </body>
 </html>

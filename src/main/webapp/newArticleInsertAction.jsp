@@ -1,11 +1,12 @@
-<%@ page import="post.Post" %>
 <%@ page import="java.util.Objects" %>
-<%@ page import="post.FindCategoryId" %>
+<%@ page import="java.util.Enumeration" %>
+<%@ page import="java.sql.Date" %>
 <%@ page import="com.oreilly.servlet.MultipartRequest" %>
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
-<%@ page import="java.util.Enumeration" %>
-<%@ page import="post.PostDAO" %>
-<%@ page import="java.sql.Date" %>
+<%@ page import="MatchCategory.FindCategoryNameId" %>
+<%@ page import="article.Article" %>
+<%@ page import="article.ArticleDAO" %>
+<%@ page import="java.time.LocalDateTime" %>
 Created by IntelliJ IDEA.
   User: jyw
   Date: 2022/12/15
@@ -35,16 +36,18 @@ Created by IntelliJ IDEA.
             // 비밀번호가 일치하지 않을 경우
             // 이전 페이지로 오류 안내 메세지와 함께 돌려보내기
             if (!Objects.equals(password, password_confirm)){
-                response.sendRedirect(request.getContextPath()+"/upload.jsp");
+                response.sendRedirect(request.getContextPath()+"/newArticleInput.jsp");
             }
             // 카테고리 ID -> 카테고리명으로 변환
-            Integer category_id = new FindCategoryId().findCategoryIdFn(category);
+            Integer category_id = new FindCategoryNameId().findCategoryIdFn(category);
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            Date sqlDate = Date.valueOf(currentDateTime.toLocalDate());
 
-            // 앞서 받은 Form 데이터를 통해 Post 만듦
-            Post po = new Post(null, title, writer, password, null, content, new Date(2014, 1,11) ,null, category_id);
-            // 게시글을 PostDAO를 통해 DB에 INSERT
-            PostDAO pd = new PostDAO();
-            pd.insertPost(po);
+            // 앞서 받은 Form 데이터를 통해 Article 만듦
+            Article newArticle = Article.builder().title(title).writer(writer).content(content).password(password).createdAt(sqlDate).categoryId(category_id).build();
+            System.out.println(newArticle.getTitle());
+            System.out.println(newArticle.getPassword());
+
 
             // 첨부파일이 여러개일경우 enum을 통해 받아옴
             Enumeration files = multi.getFileNames();

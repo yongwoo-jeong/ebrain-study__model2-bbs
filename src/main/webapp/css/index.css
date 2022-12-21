@@ -23,6 +23,8 @@
 .date_select_div{
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .category_select_div{
