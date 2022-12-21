@@ -6,4 +6,8 @@
   <select id="selectAllArticle" resultType="article.Article">
     SELECT * FROM article
   </select>
+  <insert id="insertArticle" >
+    INSERT INTO article(title, writer, password, view, content, created_at, category_id)
+    values (${title}, ${writer}, ${password}, ${view}, ${content}, ${created_at}, ${category_id})
+  </insert>
 </mapper>

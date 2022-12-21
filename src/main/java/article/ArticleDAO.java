@@ -12,9 +12,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
  * myBatis 매퍼들을 이용해 게시글 관련 데이터 송수신
  */
 public class ArticleDAO {
-	public List<Article> selectArticleAll() {
 		SqlSessionFactory sqlSessionFactory;
 		ArticleMapper mapper;
+	public List<Article> selectArticleAll() {
 		try {
 			String resource = "mybatis-config.xml";
 			InputStream inputStream = Resources.getResourceAsStream(resource);

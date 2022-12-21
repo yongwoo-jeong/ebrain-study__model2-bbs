@@ -64,6 +64,12 @@ public class MainServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 게시글을 업로드하는 메소드
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	public void postInsertArticle(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		// 멀티파트 위해 필요한 파라미터 선언
