@@ -23,6 +23,7 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     implementation 'org.projectlombok:lombok:1.18.24'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.24'
     implementation 'org.mybatis:mybatis:3.5.11'
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
     compileOnly('javax:javaee-web-api:8.0.1')

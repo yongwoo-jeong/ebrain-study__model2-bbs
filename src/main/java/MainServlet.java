@@ -1,8 +1,6 @@
-import DB.DBUtil;
-import article.Article;
+import DB.DbConnectionCheck;
 import article.ArticleDAO;
 import java.io.*;
-import java.util.List;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
@@ -19,8 +17,15 @@ public class MainServlet extends HttpServlet {
 		String command = uri.substring(conPath.length());
 		System.out.println(command);
 		try {
-			ArticleDAO ad = (ArticleDAO) new ArticleDAO().selectArticleAll();
-			System.out.println(ad);
+			ArticleDAO ad = new ArticleDAO();
+			DbConnectionCheck check = new DbConnectionCheck();
+			check.connectionTest();
+			System.out.println(ad.selectArticleAll());
+//			System.out.println(MyBatisJavaConfClient.main());
+			PrintWriter out = response.getWriter();
+			out.println("<html><body>");
+			out.println("<h1>"  + "</h1>");
+			out.println("</body></html>");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -31,10 +36,7 @@ public class MainServlet extends HttpServlet {
 			writer.println("We are in"+command);
 			writer.println("</body></html>");
 		}
-		PrintWriter out = response.getWriter();
-		out.println("<html><body>");
-		out.println("<h1>" + message + "</h1>");
-		out.println("</body></html>");
+
 	}
 
 	public void destroy() {

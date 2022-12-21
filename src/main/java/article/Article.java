@@ -11,11 +11,18 @@ import lombok.Setter;
 @Builder
 public class Article {
 	/**
-	 *
+	 * 게시글 id INT(11) - 프라이머리키
+	 * auto_increment
 	 */
 	private Integer articleId;
+	/**
+	 * 게시글 제목 VARCHAR(100) NOT NULL
+	 */
 	@NonNull
 	private String title;
+	/**
+	 * 
+	 */
 	@NonNull
 	private String writer;
 
