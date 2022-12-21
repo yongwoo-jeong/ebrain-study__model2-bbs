@@ -8,6 +8,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+/**
+ * myBatis 매퍼들을 이용해 게시글 관련 데이터 송수신
+ */
 public class ArticleDAO {
 	public List<Article> selectArticleAll() {
 		SqlSessionFactory sqlSessionFactory;
@@ -18,7 +21,7 @@ public class ArticleDAO {
 			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 			SqlSession session = sqlSessionFactory.openSession();
 			mapper = session.getMapper(ArticleMapper.class);
-			for(Article a: mapper.selectArticleAll()){
+			for(Article a: mapper.selectAllArticle()){
 				System.out.println(a.getTitle());
 			}
 		} catch (IOException e) {
