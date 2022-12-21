@@ -1,5 +1,7 @@
 <%@ page import="java.util.List" %>
-<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="article.Article" %>
+<%@ page import="java.net.URL" %>
+<%@ page import="java.net.HttpURLConnection" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -13,8 +15,6 @@
     <title>게시판 - 목록</title>
 </head>
 <body>
-<%
-%>
 <div class="container">
     <header class="title"><h1>자유 게시판 - 목록</h1></header>
     <div class="search_nav">
@@ -53,28 +53,34 @@
             <span>등록일시</span>
             <span>수정일시</span>
         </div>
-<%--        <%--%>
-<%--            PostDAO pd = new PostDAO();--%>
-<%--            List<Post> ls = pd.selectPostAll();--%>
-<%--            for(Post po : ls) {--%>
-<%--        %>--%>
-<%--        <div class="post">--%>
-<%--            <span class="post_category"><%= new FindCategoryId().findCategoryName(po.getCategory_id()) %></span>--%>
-<%--            &lt;%&ndash;            <% System.out.println(po.getFile_id());%>&ndash;%&gt;--%>
-<%--            &lt;%&ndash;            <% if ( true ){%>&ndash;%&gt;--%>
-<%--            &lt;%&ndash;            <svg></svg>&ndash;%&gt;--%>
-<%--            &lt;%&ndash;            <%} else {%>&ndash;%&gt;--%>
-<%--            &lt;%&ndash;            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">&ndash;%&gt;--%>
-<%--            &lt;%&ndash;              <path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd" />&ndash;%&gt;--%>
-<%--            &lt;%&ndash;            </svg>&ndash;%&gt;--%>
-<%--            &lt;%&ndash;            <%}%>&ndash;%&gt;--%>
-<%--            <a class="post_title" href="/post.jsp?id=<%= po.getPost_id()%>"><%=po.getTitle()%></a>--%>
-<%--            <span><%=po.getWriter()%></span>--%>
-<%--            <span><%=po.getView()%></span>--%>
-<%--            <span><%=po.getCreated_at()%></span>--%>
-<%--            <span></span>--%>
-<%--        </div>--%>
-<%--        <% } %>--%>
+        <%
+            // articles 데이터 가져오기
+            List<Article> articles = (List<Article>) request.getAttribute("selectedArticles");
+            // 첫 접속으로 articles 가 불러와지지 않았을때
+			if(articles == null){ %>
+                <%-- 서블릿에서 받아올수있도록 getArticles.action으로 포워딩           --%>
+                <jsp:forward page="/getArticles.action" />
+            <%} %>
+            <%System.out.println(articles.get(0).getTitle());
+            for(Article article : articles) {
+        %>
+        <div class="post">
+            <span class="post_category"><%= article.getCategoryId() %></span>
+            <%--            <% System.out.println(po.getFile_id());%>--%>
+            <%--            <% if ( true ){%>--%>
+            <%--            <svg></svg>--%>
+            <%--            <%} else {%>--%>
+            <%--            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">--%>
+            <%--              <path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd" />--%>
+            <%--            </svg>--%>
+            <%--            <%}%>--%>
+            <a class="post_title" href="/post.jsp?id=<%= article.getArticleId()%>"><%=article.getTitle()%></a>
+            <span><%=article.getWriter()%></span>
+            <span><%=article.getView()%></span>
+            <span><%=article.getCreatedAt()%></span>
+            <span></span>
+        </div>
+        <% } %>
     </div>
     <div class="pagination"></div>
     <button class="button upload_button" type="button" onclick="location.href='upload.jsp'">등록</button>

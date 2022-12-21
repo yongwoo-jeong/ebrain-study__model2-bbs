@@ -21,13 +21,10 @@ public class ArticleDAO {
 			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 			SqlSession session = sqlSessionFactory.openSession();
 			mapper = session.getMapper(ArticleMapper.class);
-			for(Article a: mapper.selectAllArticle()){
-				System.out.println(a.getTitle());
-			}
 		} catch (IOException e) {
 			System.out.println("batis FAIL");
 			e.printStackTrace();
 			throw new RuntimeException(e);}
-		return null;
+		return mapper.selectAllArticle();
 	}
 }
