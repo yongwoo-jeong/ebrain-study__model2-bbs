@@ -83,13 +83,11 @@
         <% } %>
     </div>
     <div class="pagination">
-<%--        <%  String currentPage = (String) request.getAttribute("currentPage");--%>
-<%--            String lastPage = (String) request.getAttribute("lastPage");--%>
-<%--            System.out.println(currentPage);--%>
-<%--            System.out.println(lastPage);--%>
-<%--            for (int i = 1; i<=10; i++){%>--%>
-<%--        <a  <%=(i == Integer.parseInt(currentPage)) ? "style=color: red'" : "" %> href=<%=request.getContextPath()%>index.jsp?page=<%=i%><%=request.getAttribute("urlWithParam")%>>1</a>--%>
-<%--        }%>--%>
+        <%  Integer currentPage = (Integer) request.getAttribute("currentPage");
+            Integer lastPage = (int) Math.ceil(totalArticle/10);%>
+            <%for (int i = 1; i<=10; i++){%>
+        <a  <%=(i == currentPage) ? "style='color:red'" : "" %> href=<%=request.getContextPath()%>index.jsp?page=<%=i%><%=request.getAttribute("urlWithParam")%>><%=i%></a>
+        <%}%>
     </div>
     <button class="button upload_button" type="button" onclick="location.href='newArticleInput.jsp'">등록</button>
 </div>

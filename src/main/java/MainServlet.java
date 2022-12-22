@@ -118,7 +118,8 @@ public class MainServlet extends HttpServlet {
 
 			// 페지네이션 위한 정수들
 			request.setAttribute("totalArticle", totalArticle);
-//			request.setAttribute("currentPage", parsedPageNumber);
+			System.out.println(parsedPageNumber);
+			request.setAttribute("currentPage", parsedPageNumber);
 			// 검색조건을 계속 유지할수있도록 쿼리스트링 그대로 전달                        // .action 은 대치해서 없애준다.
 			request.setAttribute("urlWithParam", urlWithParam.replaceAll(".action",""));
 			// index.jsp 에서 Article 들을 정상적으로 받아왔는지 확인하기 위한 애트리뷰트
