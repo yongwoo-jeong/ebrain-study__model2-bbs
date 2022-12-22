@@ -1,6 +1,6 @@
 import Logger.MyLogger;
-import MatchCategory.FindCategoryNameId;
-import Util.PagingUtil;
+import Util.FindCategoryNameId;
+import Util.ParamToIntegerUtil;
 import article.Article;
 import article.ArticleDAO;
 import com.oreilly.servlet.MultipartRequest;
@@ -17,11 +17,13 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
 /**
- * CRUD 관련 모든 요청을 처리하는 메인서블릿
+ * CRUD 관련 모든 요청을 .action 으로 받아 처리하는 서블릿
  */
 @WebServlet("*.action")
 public class MainServlet extends HttpServlet {
+	// 로깅을 위한 로거
 	MyLogger logger = MyLogger.getLogger();
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		response.setContentType("text/html; charset=utf-8");
@@ -58,26 +60,40 @@ public class MainServlet extends HttpServlet {
 
 	public void getSelectArticles(HttpServletRequest request, HttpServletResponse response){
 		try{
-			// 페이징을 위한 index 페이지 page 파라미터값 가져오기
-			String pageNumber = request.getParameter("page");
-			Integer parsedPageNumber = new PagingUtil().main(pageNumber);
-			// page 파라미터가 null 인 경우
-			// 게시글은 총 10개만 가져온다.
-			int itemsInPage = 10;
-			// 쿼리문에 LIMIT 을 주기 위한 값
-			int itemsFrom = (parsedPageNumber-1)*itemsInPage;
+			// 검색 매퍼에 넣어줄 값들을 담은 Map
 			Map selectMap = new HashMap();
-			selectMap.put("itemsFrom", itemsFrom);
-
+			// 페이징을 위한 page 파라미터값 가져오기
+			String pageNumber = request.getParameter("page");
+			Integer parsedPageNumber = new ParamToIntegerUtil().ParamToInteger(pageNumber);
+			// 쿼리문에 들어갈 LIMIT 범위 제한               //게시글은 10개씩 불러온다.
+			int articleLimitFrom = (parsedPageNumber-1) *10;
+			selectMap.put("articleLimitFrom", articleLimitFrom);
+			// 검색어
+			String keyword = request.getParameter("keyword");
+			selectMap.put("keyword", keyword);
+			// 카테고리
+			int[] categoryList;
 			String category = request.getParameter("category");
+			// 카테고리 파라미터가 없을 경우 전체 카테고리로 조회
+			if (category == null || "".equals(category)){
+				categoryList = new int[]{1,2,3};
+			} else {
+				// 파라미터가 있을 경우 categoryId 값으로 변환
+				Integer categoryId = new FindCategoryNameId().findCategoryIdFn(category);
+				categoryList = new int[]{categoryId};
+			}
+			selectMap.put("categories", categoryList);
+
+
 			String startDate = request.getParameter("start_date");
 			String lastDate = request.getParameter("last_date");
-			String keyword = request.getParameter("keyword");
+
+
 
 			ArticleDAO articleDAO = new ArticleDAO();
 			List<Article> selectedArticles = articleDAO.selectAllArticle(selectMap);
 			request.setAttribute("selectedArticles", selectedArticles);
-			request.getRequestDispatcher("index.jsp").forward(request, response);
+			request.getRequestDispatcher("index.jsp/start_date="+startDate+"&last_date="+lastDate+"&category="+"&keyword="+keyword).forward(request, response);
 		}catch (IOException e){
 			e.printStackTrace();
 		} catch (ServletException e) {
@@ -112,6 +128,8 @@ public class MainServlet extends HttpServlet {
 			// 유효성 검증을 위한 밸리데이션 값
 			Boolean validation = true;
 			// equals 이렇게쓰면 안됐던것같은데..
+
+			// 검증 실패하는 경우 모음
 			// 카테고리 선택 안됐을 경우
 			if (category.equals("")) {
 				logger.warning("No category");

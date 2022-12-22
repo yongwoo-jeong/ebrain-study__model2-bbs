@@ -5,9 +5,11 @@
 <mapper namespace="article.ArticleMapper">
   <select id="selectAllArticle" resultType="article.Article" parameterType="Map">
     SELECT * FROM article
-      WHERE title like '%${keyword}%'
+      WHERE title like '%${keyword}%' AND
+            category_id IN <foreach item="category" index="index" collection="categories"
+                            open="(" separator="," close=")"> ${category.value}</foreach>
       ORDER BY article_id DESC
-      LIMIT ${itemsFrom}, ${itemsFrom+10}
+      LIMIT ${articleLimitFrom}, ${articleLimitFrom+10}
   </select>
   <insert id="insertArticle" parameterType="article.Article">
     INSERT INTO article ( title, writer, password, content, created_at, category_id)

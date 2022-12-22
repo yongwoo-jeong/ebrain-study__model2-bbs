@@ -9,8 +9,8 @@
 
   - [ ] 게시글 제목 80자 넘을경우 '...' 표시
   - [ ] 검색 게시글 건수 표시
-  - [ ] 페이지네이션 구현
-  - [ ] 날짜/카테고리/내용 검색
+  - [x] 페이지네이션 구현
+  - [x] 날짜/카테고리/내용 검색
   - [ ] 게시글 이동해도 검색조건은 초기화X'
 
 - [ ] 게시글 등록/수정/삭제하기
@@ -37,7 +37,7 @@ ___
   - [ ] 크로스사이트스크립팅
 - [ ] 자바의 call by refrence
   - [ ] Primitive type, Reference type
- - [ ] 체크 예외(Checked Exception)와 언체크 예외(Unchecked Exception)  
+ - [x] 체크 예외(Checked Exception)와 언체크 예외(Unchecked Exception)  
 
 ___
 #### 어려웠던 부분 (원인파악필요)

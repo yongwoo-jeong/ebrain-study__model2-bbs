@@ -1,4 +1,4 @@
-package MatchCategory;
+package Util;
 
 import java.util.Objects;
 

@@ -71,7 +71,7 @@
             </div>
         </div>
         <div class="button_container">
-            <a href="index.jsp" class="cancel_button">취소</a>
+            <a onclick="history.back();" class="cancel_button">취소</a>
             <input type="submit" class="save_button" value="저장" />
         </div>
     </form>
