@@ -25,26 +25,46 @@ public class MainServlet extends HttpServlet {
 	// 로깅을 위한 로거
 	MyLogger logger = MyLogger.getLogger();
 
+	/**
+	 * 모든 GET 요청을 처리
+	 * root path(/) 뒤 경로를 받아 매칭되는 메소드에서 처리
+	 * request, response 받아 개별 URL에 따른 메소드들로 다시 전달
+	 * @param request   HttpServletRequest. 개별 URL을 처리하는 메소드의 파라미터로 다시 전달 됨
+	 *
+	 * @param response  HttpServletResponse. 개별 URL을 처리하는 메소드의 파라미터로 다시 전달 됨
+	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		response.setContentType("text/html; charset=utf-8");
 		// 요청이 들어오는 식별자 확인
 		String uri = request.getRequestURI();
 		MyLogger LOG = MyLogger.getLogger();
-		logger.info("현재 주소:" + uri);
+		// GET 요청된 주소 로깅
+		logger.info("GET) : " + uri);
 
+		// DAO에서 게시글 목록/검색 결과를 받아 index로 보내는 요청/메소드
 		if(uri.equals("/selectArticles.action")){
 			getSelectArticles(request,response);
 		}
-		// 새 게시글 업로드 하기위한 newArticleInsertAction
-
 	}
+
+	/**
+	 /**
+	 * 모든 POST 요청을 처리
+	 * root path(/) 뒤 경로를 받아 매칭되는 메소드에서 처리
+	 * request, response 받아 개별 URL에 따른 메소드들로 다시 전달
+	 * @param request   HttpServletRequest. 개별 URL을 처리하는 메소드의 파라미터로 다시 전달 됨
+	 *
+	 * @param response  HttpServletResponse. 개별 URL을 처리하는 메소드의 파라미터로 다시 전달 됨
+	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException,ServletException {
 		response.setContentType("text/html; charset=utf-8");
 		String uri = request.getRequestURI();
 		MyLogger LOG = MyLogger.getLogger();
-		logger.info("현재 주소:" + uri);
+		// POST 요청된 주소 로깅
+		logger.info("POST) : " + uri);
+		// DAO 통해 새로운 게시글을 DB INSERT 하는 요청/메소드
 		if (uri.equals("/newArticleInsert.action")) {
 			postInsertArticle(request,response);
 		}
@@ -54,81 +74,76 @@ public class MainServlet extends HttpServlet {
 	}
 
 	/**
-	 * 홈페이지/검색 요청을 처리해 게시글을 조회해주는 메서드
-	 * @param request
-	 * @param response
+	 * 최초 index 페이지에 요청된 경우 게시글을 받기위해 이 주소로 forward 되어 Article 전달
+	 * index 페이지 검색 조건에 맞는 article 을 ArticleDAO 를 통해  select 해 index 페이지로 다시 보낸다.
+	 *
+	 * @param request mainServlet 의 doGet 으로 전달된 request 객체 그대로 가져옴
+	 * @param response mainServlet 의 doGet 으로 전달된 response 객체 그대로 가져옴
 	 */
 	public void getSelectArticles(HttpServletRequest request, HttpServletResponse response){
 		try{
-			// 검색 매퍼에 넣어줄 값들을 담은 Map
+			// 검색 SELECT 매퍼 parameter 로 담을 Map - 카테고리, 키워드, 날짜, 페이징 숫자
 			Map selectMap = new HashMap();
 			// 총 검색건을 세기 위한 Map
 			Map totalSelectMap = new HashMap();
 			// 페이징을 위한 page 파라미터값 가져오기
 			String pageNumber = request.getParameter("page");
+			// page 파라미터를 받아 정수 형태로 변환해주는 클래스 사용
 			Integer parsedPageNumber = new ParamToIntegerUtil().ParamToInteger(pageNumber);
-			// 쿼리문에 들어갈 LIMIT From               //게시글은 10개씩 불러온다.
+			// SELECT LIMIT 을 위한 매퍼 파라미터             //게시글은 10개씩 불러온다.
 			int articleLimitFrom = (parsedPageNumber-1) *10;
 			selectMap.put("articleLimitFrom", articleLimitFrom);
 			totalSelectMap.put("articleLimitFrom", 0);
-			// LIMIT To. 쿼리문에 단순히 10을 더하지 않는 이유는 전체 건수 조회가 필요해서
+			// LIMIT To.
 			int articleLimitTo = articleLimitFrom+10;
 			selectMap.put("articleLimitTo",articleLimitTo);
+			// 전체 게시글수 조회를 위해 일단 10000 으로 설정
 			totalSelectMap.put("articleLimitTo",10000);
 
-			// 검색어
+			// SELECT 매퍼를 위한 검색 키워드
 			String keyword = request.getParameter("keyword");
 			selectMap.put("keyword", keyword);
 			totalSelectMap.put("keyword",keyword);
-			// 카테고리
+			// SELECT 매퍼를 위한 카테고리
 			int[] categoryList;
 			String category = request.getParameter("category");
 			// 카테고리 파라미터가 없을 경우 전체 카테고리로 조회
 			if (category == null || "".equals(category)){
 				categoryList = new int[]{1,2,3};
 			} else {
-				// 파라미터가 있을 경우 categoryId 값으로 변환
+				// 카테고리 검색조건이 설정되어 파라미터가 있을 경우 categoryId 값으로 변환
 				Integer categoryId = new FindCategoryNameId().findCategoryIdFn(category);
 				categoryList = new int[]{categoryId};
 			}
 			selectMap.put("categories", categoryList);
 			totalSelectMap.put("categories", categoryList);
-			// 날짜 구현 필요
+			// SELECT 매퍼를 위한 검색 날짜
 			String startDate = request.getParameter("start_date");
 			String lastDate = request.getParameter("last_date");
-			// DAO 통해 Article Insert
+			// DAO 통해 Article SELECT 로 검색 결과 조회
 			ArticleDAO articleDAO = new ArticleDAO();
 			List<Article> selectedArticles = articleDAO.selectAllArticle(selectMap);
+			// 전체 검색 건수를 표현하기 위한 변수
 			Integer totalArticle = articleDAO.selectAllArticle(totalSelectMap).size();
-			if (category==null){
-				category = "";
-			}
-			if (keyword==null){
-				keyword ="";
-			}
-			if (startDate==null){
-				startDate="";
-			}
-			if (lastDate==null){
-				lastDate="";
-			}
-			String urlWithParam = "&category="+category+"&keyword="+keyword
-					+"&start_date="+startDate+"&last_date="+lastDate;
+			// 조건이 없을경우 아래 urlWIthParam 에 null 형태로 담기는걸 방지한 공백 스트링
+
 
 
 			// 페지네이션 위한 정수들
 			request.setAttribute("totalArticle", totalArticle);
 			System.out.println(parsedPageNumber);
 			request.setAttribute("currentPage", parsedPageNumber);
-			// 검색조건을 계속 유지할수있도록 쿼리스트링 그대로 전달                        // .action 은 대치해서 없애준다.
+			// 페이지가 바뀌어도 검색조건을 계속 유지할수있도록 쿼리스트링을 그대로 전달
+			String urlWithParam = "&category="+category+"&keyword="+keyword+"&start_date="+startDate+"&last_date="+lastDate;
+			// 반복되는 .action 은 쿼리스트링에서 제외해준다
 			request.setAttribute("urlWithParam", urlWithParam.replaceAll(".action",""));
 			// index.jsp 에서 Article 들을 정상적으로 받아왔는지 확인하기 위한 애트리뷰트
+			// 이 애트리뷰트가 없는 경우 index.jsp 에서 서블릿으로 /selectArticles.action GET 요청을 보낸다
 			request.setAttribute("selectedArticles", selectedArticles);
 			request.getRequestDispatcher("index.jsp").forward(request, response);
-		}catch (IOException e){
+		}catch (IOException | ServletException e){
+			logger.severe(e.toString());
 			e.printStackTrace();
-		} catch (ServletException e) {
-			throw new RuntimeException(e);
 		}
 	}
 

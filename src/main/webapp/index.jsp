@@ -87,7 +87,8 @@
             Integer lastPage = (int) Math.ceil(totalArticle/10);%>
             <%for (int i = 1; i<=10; i++){%>
         <a  <%=(i == currentPage) ? "style='color:red'" : "" %> href=<%=request.getContextPath()%>index.jsp?page=<%=i%><%=request.getAttribute("urlWithParam")%>><%=i%></a>
-        <%}%>
+            <%if (i>lastPage) break;%>
+            <%}%>
     </div>
     <button class="button upload_button" type="button" onclick="location.href='newArticleInput.jsp'">등록</button>
 </div>
