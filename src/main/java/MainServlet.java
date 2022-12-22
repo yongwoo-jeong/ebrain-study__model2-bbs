@@ -98,6 +98,7 @@ public class MainServlet extends HttpServlet {
 			int articleLimitTo = articleLimitFrom+10;
 			selectMap.put("articleLimitTo",articleLimitTo);
 			// 전체 게시글수 조회를 위해 일단 10000 으로 설정
+			// 애초에 페이징 계획이 잘못된듯.. 앞단에서 끊어서 보여주는 방식이 나았을것같다.
 			totalSelectMap.put("articleLimitTo",10000);
 
 			// SELECT 매퍼를 위한 검색 키워드
