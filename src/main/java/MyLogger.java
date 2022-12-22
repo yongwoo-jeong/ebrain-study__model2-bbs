@@ -1,20 +1,27 @@
-
-import java.io.IOException;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class MyLogger {
 
 	Logger logger = Logger.getLogger("mylogger");
 	private static MyLogger instance = new MyLogger();
 
-	public static MyLogger getLogger() {
+	private MyLogger(){ // 싱글톤 패턴
+		logger.setLevel(Level.ALL);
+	}
+	public static MyLogger getLogger(){
 		return instance;
 	}
-
-	public void log(String msg) {
-		logger.info(msg);
+	public void info(String msg){
+		logger.fine(msg);
 	}
+
+	public void warning(String msg){
+		logger.warning(msg);
+	}
+
+	public void severe(String msg){
+		logger.severe(msg);
+	}
+
 }

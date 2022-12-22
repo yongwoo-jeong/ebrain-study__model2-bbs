@@ -6,9 +6,12 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import java.io.*;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -18,13 +21,14 @@ import javax.servlet.annotation.*;
  */
 @WebServlet("*.action")
 public class MainServlet extends HttpServlet {
+	MyLogger logger = MyLogger.getLogger();
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		response.setContentType("text/html; charset=utf-8");
 		// 요청이 들어오는 식별자 확인
 		String uri = request.getRequestURI();
 		MyLogger LOG = MyLogger.getLogger();
-		System.out.println("현재 주소:"+ uri);
+		logger.info("현재 주소:" + uri);
 
 		if(uri.equals("/selectArticles.action")){
 			getSelectArticles(request,response);
@@ -37,7 +41,7 @@ public class MainServlet extends HttpServlet {
 		response.setContentType("text/html; charset=utf-8");
 		String uri = request.getRequestURI();
 		MyLogger LOG = MyLogger.getLogger();
-		System.out.println("현재 주소:" + uri);
+		logger.info("현재 주소:" + uri);
 		if (uri.equals("/newArticleInsert.action")) {
 			postInsertArticle(request,response);
 		}
@@ -93,30 +97,30 @@ public class MainServlet extends HttpServlet {
 			// equals 이렇게쓰면 안됐던것같은데..
 			// 카테고리 선택 안됐을 경우
 			if (category.equals("")) {
-				System.out.println("no categoty ");
+				logger.warning("No category");
 				validation = false;
 			}
 			//Form data 길이 요건을 충족하지 않는 경우
 			if (writer.length() != 3 && title.length() != 4) {
-				System.out.println("no writer");
+				logger.warning("Writer length out of range");
 				validation = false;
 			}
 			if (title.length() < 2 || title.length() >= 100) {
-				System.out.println("no title");
+				logger.warning("title length out of range");
 				validation = false;
 			}
 			if (content.length() < 4 || content.length() >= 200) {
-				System.out.println("no content");
+				logger.warning("content length out of range");
 				validation = false;
 			}
 			// 비밀번호가 일치하지 않을 경우
 			if (!Objects.equals(password, password_confirm)) {
-				System.out.println("no password");
+				logger.warning("Password not confirmed");
 				validation = false;
 			}
 			// 검증되지 않은 경우 이전 페이지로 돌려보내기
 			if (!validation) {
-				System.out.println("Validaion failed. Back to page");
+				logger.warning("Validaion failed. Back to page");
 				response.sendRedirect(request.getContextPath()+"/newArticleInput.jsp");
 			} else {
 				// 카테고리 ID -> 카테고리명으로 변환
@@ -143,7 +147,7 @@ public class MainServlet extends HttpServlet {
 //					if (fileName == null)
 //						continue;
 //				}
-				System.out.println("Acticle has made");
+				logger.info("New article has made");
 				response.sendRedirect("/index.jsp");
 
 			}
