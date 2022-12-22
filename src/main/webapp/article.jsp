@@ -1,4 +1,6 @@
-<%@ page import="article.Article" %><%--
+<%@ page import="article.Article" %>
+<%@ page import="comment.Comment" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: jyw
   Date: 2022/12/14
@@ -60,8 +62,14 @@
     </div>
     <div class="comments_container">
         <div class="comment_row">
-            <div>시간</div>
-            <div>댓글내용</div>
+            <%
+                List<Comment> commentList = (List<Comment>) request.getAttribute("commentList");
+				for (Comment comment : commentList){
+            %>
+            <div><%=comment.getCreatedAt()%></div>
+            <div><%=comment.getContent()%></div>
+            <hr />
+            <% } %>
         </div>
         <div>
             <form method="post" action=<%=request.getContextPath()%>/commentUploadAction.jsp?id=<%article.getArticleId();%> name="upload">

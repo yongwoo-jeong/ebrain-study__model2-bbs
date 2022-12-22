@@ -5,8 +5,9 @@ import article.Article;
 import article.ArticleDAO;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+import comment.Comment;
+import comment.CommentDAO;
 import java.io.*;
-import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -46,11 +47,16 @@ public class MainServlet extends HttpServlet {
 		if(uri.equals("/selectArticles.action")){
 			getSelectArticles(request,response);
 		}
-		// id 에 맞춰 게시글 정보 받아온다음 article.jsp 로 포워딩하는 메소드
+		// id 에 맞춰 게시글/댓글 정보 받아온다음 article.jsp 로 포워딩하는 메소드
 		if (uri.equals("/viewPost.action")){
+			// 쿼리스트링 파라미터 받아온 다음
 			String articleId = request.getParameter("id");
+			// 해당 게시글을 DAO 통해 받아옴
 			Article article = new ArticleDAO().getArticle(articleId);
+			// 이를 req 객체 애트리뷰트에 담아서 포워딩
 			request.setAttribute("article",article);
+			List<Comment> commentList = new CommentDAO().selectComments(articleId);
+			request.setAttribute("commentList",commentList);
 			request.getRequestDispatcher("article.jsp?id="+articleId).forward(request, response);
 		}
 	}
@@ -71,9 +77,13 @@ public class MainServlet extends HttpServlet {
 		MyLogger LOG = MyLogger.getLogger();
 		// POST 요청된 주소 로깅
 		logger.info("POST) : " + uri);
-		// DAO 통해 새로운 게시글을 DB INSERT 하는 요청/메소드
+		// Article DAO 통해 새로운 게시글을 DB INSERT 하는 요청/메소드
 		if (uri.equals("/newArticleInsert.action")) {
 			postInsertArticle(request,response);
+		}
+		// commentDAO 통해 댓글 등록하는 메서드
+		if (uri.equals("/commentUploadAction.jsp")){
+
 		}
 	}
 
