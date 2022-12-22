@@ -9,7 +9,7 @@
             category_id IN <foreach item="category" index="index" collection="categories"
                             open="(" separator="," close=")"> ${category.value}</foreach>
       ORDER BY article_id DESC
-      LIMIT ${articleLimitFrom}, ${articleLimitFrom+10}
+      LIMIT ${articleLimitFrom}, ${articleLimitTo}
   </select>
   <insert id="insertArticle" parameterType="article.Article">
     INSERT INTO article ( title, writer, password, content, created_at, category_id)

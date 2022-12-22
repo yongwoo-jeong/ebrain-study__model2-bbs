@@ -12,6 +12,7 @@
     <title>게시판 - 목록</title>
 </head>
 <body>
+<% Integer totalArticle = (Integer) request.getAttribute("totalArticle"); %>
 <div class="container">
     <header class="title"><h1>자유 게시판 - 목록</h1></header>
     <form method="get" action=<%=request.getContextPath()%>/selectArticles.action>
@@ -27,7 +28,7 @@
                     <form action="" method="post">
                         <label for="category"></label>
                         <select name="category" id="category">
-                            <option>전체 카테고리</option>
+                            <option value="">전체 카테고리</option>
                             <option value="JAVA">JAVA</option>
                             <option value="Javascript">Javascript</option>
                             <option value="Database">Database</option>
@@ -43,7 +44,7 @@
             </div>
         </div>
     </form>
-    <div class="search_outcome">총 512건</div>
+    <div class="search_outcome">총 <%=totalArticle%>건</div>
     <div class="post_container">
         <div class="post">
             <span>카테고리</span>
@@ -82,8 +83,13 @@
         <% } %>
     </div>
     <div class="pagination">
-        <a href=<%=request.getContextPath()%>index.jsp?page=1.action>1</a>
-        <a href=<%=request.getContextPath()%>index.jsp?page=2.action>2</a>
+<%--        <%  String currentPage = (String) request.getAttribute("currentPage");--%>
+<%--            String lastPage = (String) request.getAttribute("lastPage");--%>
+<%--            System.out.println(currentPage);--%>
+<%--            System.out.println(lastPage);--%>
+<%--            for (int i = 1; i<=10; i++){%>--%>
+<%--        <a  <%=(i == Integer.parseInt(currentPage)) ? "style=color: red'" : "" %> href=<%=request.getContextPath()%>index.jsp?page=<%=i%><%=request.getAttribute("urlWithParam")%>>1</a>--%>
+<%--        }%>--%>
     </div>
     <button class="button upload_button" type="button" onclick="location.href='newArticleInput.jsp'">등록</button>
 </div>

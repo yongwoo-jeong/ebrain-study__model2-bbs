@@ -6,6 +6,7 @@ import article.ArticleDAO;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import java.io.*;
+import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -53,24 +54,32 @@ public class MainServlet extends HttpServlet {
 	}
 
 	/**
-	 * /selectArticles.action GET 요청을 처리하고 게시글을 조회해주는 메서드
+	 * 홈페이지/검색 요청을 처리해 게시글을 조회해주는 메서드
 	 * @param request
 	 * @param response
 	 */
-
 	public void getSelectArticles(HttpServletRequest request, HttpServletResponse response){
 		try{
 			// 검색 매퍼에 넣어줄 값들을 담은 Map
 			Map selectMap = new HashMap();
+			// 총 검색건을 세기 위한 Map
+			Map totalSelectMap = new HashMap();
 			// 페이징을 위한 page 파라미터값 가져오기
 			String pageNumber = request.getParameter("page");
 			Integer parsedPageNumber = new ParamToIntegerUtil().ParamToInteger(pageNumber);
-			// 쿼리문에 들어갈 LIMIT 범위 제한               //게시글은 10개씩 불러온다.
+			// 쿼리문에 들어갈 LIMIT From               //게시글은 10개씩 불러온다.
 			int articleLimitFrom = (parsedPageNumber-1) *10;
 			selectMap.put("articleLimitFrom", articleLimitFrom);
+			totalSelectMap.put("articleLimitFrom", 0);
+			// LIMIT To. 쿼리문에 단순히 10을 더하지 않는 이유는 전체 건수 조회가 필요해서
+			int articleLimitTo = articleLimitFrom+10;
+			selectMap.put("articleLimitTo",articleLimitTo);
+			totalSelectMap.put("articleLimitTo",10000);
+
 			// 검색어
 			String keyword = request.getParameter("keyword");
 			selectMap.put("keyword", keyword);
+			totalSelectMap.put("keyword",keyword);
 			// 카테고리
 			int[] categoryList;
 			String category = request.getParameter("category");
@@ -83,17 +92,38 @@ public class MainServlet extends HttpServlet {
 				categoryList = new int[]{categoryId};
 			}
 			selectMap.put("categories", categoryList);
-
-
+			totalSelectMap.put("categories", categoryList);
+			// 날짜 구현 필요
 			String startDate = request.getParameter("start_date");
 			String lastDate = request.getParameter("last_date");
-
-
-
+			// DAO 통해 Article Insert
 			ArticleDAO articleDAO = new ArticleDAO();
 			List<Article> selectedArticles = articleDAO.selectAllArticle(selectMap);
+			Integer totalArticle = articleDAO.selectAllArticle(totalSelectMap).size();
+			if (category==null){
+				category = "";
+			}
+			if (keyword==null){
+				keyword ="";
+			}
+			if (startDate==null){
+				startDate="";
+			}
+			if (lastDate==null){
+				lastDate="";
+			}
+			String urlWithParam = "&category="+category+"&keyword="+keyword
+					+"&start_date="+startDate+"&last_date="+lastDate;
+
+
+			// 페지네이션 위한 정수들
+			request.setAttribute("totalArticle", totalArticle);
+//			request.setAttribute("currentPage", parsedPageNumber);
+			// 검색조건을 계속 유지할수있도록 쿼리스트링 그대로 전달                        // .action 은 대치해서 없애준다.
+			request.setAttribute("urlWithParam", urlWithParam.replaceAll(".action",""));
+			// index.jsp 에서 Article 들을 정상적으로 받아왔는지 확인하기 위한 애트리뷰트
 			request.setAttribute("selectedArticles", selectedArticles);
-			request.getRequestDispatcher("index.jsp/start_date="+startDate+"&last_date="+lastDate+"&category="+"&keyword="+keyword).forward(request, response);
+			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}catch (IOException e){
 			e.printStackTrace();
 		} catch (ServletException e) {
