@@ -1,6 +1,7 @@
 ## 스터디 2주차  : 모델2 게시판 구현하기
 
 #### JSP, 자바 서블릿, JDBC, 마리아DB를 활용해 게시판구현하기
+<br />
 
 ### 기능
 
@@ -20,7 +21,12 @@
 
   - [ ] 파일 업로드 구현
 
-  
+<br/>
+<br/>
+<br/>
+<br/>
+
+___
 
 ### 공부할 것
 
@@ -32,9 +38,8 @@
 - [ ] 자바의 call by refrence
   - [ ] Primitive type, Reference type
  - [ ] 체크 예외(Checked Exception)와 언체크 예외(Unchecked Exception)  
-  
-  
-  
+
+___
 #### 어려웠던 부분 (원인파악필요)
 - Servlet 프로젝트 생성
   - 인텔리제이 프로젝트를 생성할때 java EE servlet, web을 추가해주어야 정상적으로 진행가능했다.

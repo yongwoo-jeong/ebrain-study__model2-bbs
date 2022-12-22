@@ -15,31 +15,33 @@
 <div class="container">
     <header class="title"><h1>자유 게시판 - 목록</h1></header>
     <div class="search_nav">
-        <div class="date_select_div">
-            <span>등록일</span>
-            <input type="date" value="2022-12-01"/>
-            <span>~</span>
-            <input type="date" value="2022-12-20"/>
-        </div>
-        <div class="category_select_div">
-            <div class="category_drop_down">
-                <form action="" method="post">
-                    <label for="category"></label>
-                    <select name="category" id="category">
-                        <option>전체 카테고리</option>
-                        <option value="JAVA">JAVA</option>
-                        <option value="Javascript">Javascript</option>
-                        <option value="Database">Database</option>
-                    </select>
-                </form>
+        <form method="post">
+            <div class="date_select_div">
+                <span>등록일</span>
+                <input type="date" value="2022-12-01" name="start_date"/>
+                <span>~</span>
+                <input type="date" value="2022-12-20"name="last_date"/>
             </div>
-        </div>
-        <div class="search_input_div">
-            <div>
-                <label>
-                    <input type="text" placeholder="검색어를 입력해주세요. (제목 + 작성자 + 내용)" />
-                </label></div>
-            <input class="button" type="button" value="검색" />
+            <div class="category_select_div">
+                <div class="category_drop_down">
+                    <form action="" method="post">
+                        <label for="category"></label>
+                        <select name="category" id="category">
+                            <option>전체 카테고리</option>
+                            <option value="JAVA">JAVA</option>
+                            <option value="Javascript">Javascript</option>
+                            <option value="Database">Database</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class="search_input_div">
+                <div>
+                    <label>
+                        <input type="text" placeholder="검색어를 입력해주세요. (제목 + 작성자 + 내용)" />
+                    </label></div>
+                <input class="submit" type="submit" value="검색" />
+        </form>
         </div>
     </div>
     <div class="search_outcome">총 512건</div>

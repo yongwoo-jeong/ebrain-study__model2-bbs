@@ -1,3 +1,4 @@
+import Logger.MyLogger;
 import MatchCategory.FindCategoryNameId;
 import article.Article;
 import article.ArticleDAO;
@@ -8,10 +9,6 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -149,7 +146,6 @@ public class MainServlet extends HttpServlet {
 //				}
 				logger.info("New article has made");
 				response.sendRedirect("/index.jsp");
-
 			}
 		} catch (IOException e) {
 			response.sendRedirect("/newArticleInput.jsp");
