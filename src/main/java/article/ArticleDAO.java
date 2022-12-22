@@ -17,13 +17,13 @@ public class ArticleDAO {
 	SqlSessionFactory sqlSessionFactory;
 	ArticleMapper mapper;
 	MyLogger logger = MyLogger.getLogger();
-	public List<Article> selectAllArticle() {
+	public List<Article> selectAllArticle(int itemsFrom) {
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 			SqlSession session = sqlSessionFactory.openSession();
 			mapper = session.getMapper(ArticleMapper.class);
-			List<Article> articleFromMapper = mapper.selectAllArticle();
+			List<Article> articleFromMapper = mapper.selectAllArticle(itemsFrom);
 			session.close();
 			return articleFromMapper;
 		} catch (IOException e) {

@@ -15,7 +15,7 @@
 <div class="container">
     <header class="title"><h1>자유 게시판 - 목록</h1></header>
     <div class="search_nav">
-        <form method="post">
+        <form method="post" action=<%=request.getContextPath()%>/searchArticle.action>
             <div class="date_select_div">
                 <span>등록일</span>
                 <input type="date" value="2022-12-01" name="start_date"/>
@@ -82,7 +82,10 @@
         </div>
         <% } %>
     </div>
-    <div class="pagination"></div>
+    <div class="pagination">
+        <a href=<%=request.getContextPath()%>index.jsp?page=1.action>1</a>
+        <a href=<%=request.getContextPath()%>index.jsp?page=2.action>2</a>
+    </div>
     <button class="button upload_button" type="button" onclick="location.href='newArticleInput.jsp'">등록</button>
 </div>
 </body>

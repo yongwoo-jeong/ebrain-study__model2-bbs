@@ -52,10 +52,33 @@ public class MainServlet extends HttpServlet {
 	 * @param request
 	 * @param response
 	 */
+
 	public void getSelectArticles(HttpServletRequest request, HttpServletResponse response){
 		try{
+			// index 페이지 page 파라미터값 가져오기
+			String pageNumber = request.getParameter("page");
+			Integer parsedPageNumber;
+			// page 파라미터가 null 인 경우
+			if(pageNumber ==null){
+				parsedPageNumber = 1;
+			} else{
+				// page 파라미터에 .action 이 딸려오기 때문에 제거
+				pageNumber = pageNumber.replaceAll(".action", "");
+				// 제거한 pageNumber 가 숫자로 구성된 스트링인지 확인
+				boolean isNumeric = pageNumber.matches("[+-]?\\d*(\\.\\d+)?");
+				// 숫자가 아닌 값이 들어왔을 경우 페이지 1로 보내기
+				if(!isNumeric){
+					parsedPageNumber = 1;
+				} else{
+					parsedPageNumber = Integer.parseInt(pageNumber);
+				}
+			}
+			// 게시글은 총 10개만 가져온다.
+			int itemsInPage = 10;
+			// 쿼리문에 LIMIT 을 주기 위한 값
+			int itemsFrom = (parsedPageNumber-1)*itemsInPage;
 			ArticleDAO articleDAO = new ArticleDAO();
-			List<Article> selectedArticles = articleDAO.selectAllArticle();
+			List<Article> selectedArticles = articleDAO.selectAllArticle(itemsFrom);
 			request.setAttribute("selectedArticles", selectedArticles);
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}catch (IOException e){
@@ -145,11 +168,12 @@ public class MainServlet extends HttpServlet {
 //						continue;
 //				}
 				logger.info("New article has made");
+				// 등록됐을 경우 홈페이지로 리다이렉트
 				response.sendRedirect("/index.jsp");
 			}
 		} catch (IOException e) {
+			logger.severe("게시글 등록중 IOException 발생");
 			response.sendRedirect("/newArticleInput.jsp");
-			e.printStackTrace();
 		}
 	}
 }
