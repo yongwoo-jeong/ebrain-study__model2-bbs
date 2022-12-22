@@ -84,7 +84,7 @@
     </div>
     <div class="pagination">
         <%  Integer currentPage = (Integer) request.getAttribute("currentPage");
-            Integer lastPage = (int) Math.ceil(totalArticle/10);%>
+            int lastPage = (int) Math.ceil(totalArticle/10);%>
             <%for (int i = 1; i<=10; i++){%>
         <a  <%=(i == currentPage) ? "style='color:red'" : "" %> href=<%=request.getContextPath()%>index.jsp?page=<%=i%><%=request.getAttribute("urlWithParam")%>><%=i%></a>
             <%if (i>lastPage) break;%>

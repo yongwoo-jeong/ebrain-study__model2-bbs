@@ -120,7 +120,16 @@ public class MainServlet extends HttpServlet {
 			totalSelectMap.put("categories", categoryList);
 			// SELECT 매퍼를 위한 검색 날짜
 			String startDate = request.getParameter("start_date");
-			String lastDate = request.getParameter("last_date");
+			String endDate = request.getParameter("last_date");
+//			Date parsedStartDate;
+			Date parsedEndDate;
+			// 각 날짜가 선택되지 않은 경우
+			selectMap.put("startDate",startDate);
+			selectMap.put("endDate",endDate);
+			totalSelectMap.put("startDate",startDate);
+			totalSelectMap.put("endDate",endDate);
+			System.out.println(startDate);
+			System.out.println(endDate);
 			// DAO 통해 Article SELECT 로 검색 결과 조회
 			ArticleDAO articleDAO = new ArticleDAO();
 			List<Article> selectedArticles = articleDAO.selectAllArticle(selectMap);
@@ -128,14 +137,23 @@ public class MainServlet extends HttpServlet {
 			Integer totalArticle = articleDAO.selectAllArticle(totalSelectMap).size();
 			// 조건이 없을경우 아래 urlWIthParam 에 null 형태로 담기는걸 방지한 공백 스트링
 
-
-
+			if (category==null){
+				category="";
+			}
+			if (keyword==null){
+				keyword="";
+			}
+			if (startDate==null){
+				startDate="";
+			}
+			if (endDate==null){
+				endDate="";
+			}
 			// 페지네이션 위한 정수들
 			request.setAttribute("totalArticle", totalArticle);
-			System.out.println(parsedPageNumber);
 			request.setAttribute("currentPage", parsedPageNumber);
 			// 페이지가 바뀌어도 검색조건을 계속 유지할수있도록 쿼리스트링을 그대로 전달
-			String urlWithParam = "&category="+category+"&keyword="+keyword+"&start_date="+startDate+"&last_date="+lastDate;
+			String urlWithParam = "&category="+category+"&keyword="+keyword+"&start_date="+startDate+"&last_date="+endDate;
 			// 반복되는 .action 은 쿼리스트링에서 제외해준다
 			request.setAttribute("urlWithParam", urlWithParam.replaceAll(".action",""));
 			// index.jsp 에서 Article 들을 정상적으로 받아왔는지 확인하기 위한 애트리뷰트

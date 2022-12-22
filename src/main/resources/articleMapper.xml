@@ -7,7 +7,17 @@
     SELECT * FROM article
       WHERE title like '%${keyword}%' AND
             category_id IN <foreach item="category" index="index" collection="categories"
-                            open="(" separator="," close=")"> ${category.value}</foreach>
+                            open="(" separator="," close=")"> ${category.value}</foreach> AND
+            DATE(created_at) BETWEEN 
+                                        <choose>
+                                          <when test="startDate != null and startDate !='' ">'${startDate}'</when>
+                                          <otherwise>'2020-01-01'</otherwise>
+                                        </choose>
+                                        AND
+                                        <choose>
+                                          <when test="endDate != null and endDate !='' ">'${endDate}'</when>
+                                          <otherwise>'2100-01-01'</otherwise>
+                                        </choose>
       ORDER BY article_id DESC
       LIMIT ${articleLimitFrom}, ${articleLimitTo}
   </select>
