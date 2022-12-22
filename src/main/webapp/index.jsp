@@ -8,6 +8,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="css/index.css">
+    <script type="text/javascript" defer src="js/index.js"></script>
     <meta charset="UTF-8" />
     <title>게시판 - 목록</title>
 </head>
@@ -19,9 +20,9 @@
         <div class="search_nav">
             <div class="date_select_div">
                 <span>등록일</span>
-                <input type="date" name="start_date"/>
+                <input type="date" name="start_date" class="start_date"/>
                 <span>~</span>
-                <input type="date" name="last_date"/>
+                <input type="date" name="last_date" class="end_date"/>
             </div>
             <div class="category_select_div">
                 <div class="category_drop_down">
@@ -82,11 +83,11 @@
         </div>
         <% } %>
     </div>
-    <div class="pagination">
+    <div class="pagination_container">
         <%  Integer currentPage = (Integer) request.getAttribute("currentPage");
             int lastPage = (int) Math.ceil(totalArticle/10);%>
             <%for (int i = 1; i<=10; i++){%>
-        <a  <%=(i == currentPage) ? "style='color:red'" : "" %> href=<%=request.getContextPath()%>index.jsp?page=<%=i%><%=request.getAttribute("urlWithParam")%>><%=i%></a>
+        <a class="pagination"  <%=(i == currentPage) ? "style='color:red'" : "" %> href=<%=request.getContextPath()%>index.jsp?page=<%=i%><%=request.getAttribute("urlWithParam")%>><%=i%></a>
             <%if (i>lastPage) break;%>
             <%}%>
     </div>

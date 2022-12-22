@@ -128,15 +128,13 @@ public class MainServlet extends HttpServlet {
 			selectMap.put("endDate",endDate);
 			totalSelectMap.put("startDate",startDate);
 			totalSelectMap.put("endDate",endDate);
-			System.out.println(startDate);
-			System.out.println(endDate);
 			// DAO 통해 Article SELECT 로 검색 결과 조회
 			ArticleDAO articleDAO = new ArticleDAO();
 			List<Article> selectedArticles = articleDAO.selectAllArticle(selectMap);
 			// 전체 검색 건수를 표현하기 위한 변수
 			Integer totalArticle = articleDAO.selectAllArticle(totalSelectMap).size();
-			// 조건이 없을경우 아래 urlWIthParam 에 null 형태로 담기는걸 방지한 공백 스트링
 
+			// 조건이 없을경우 아래 urlWIthParam 에 null 형태로 담기는걸 방지한 공백 문자열
 			if (category==null){
 				category="";
 			}
