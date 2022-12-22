@@ -21,6 +21,10 @@
       ORDER BY article_id DESC
       LIMIT ${articleLimitFrom}, ${articleLimitTo}
   </select>
+  <select id="getArticle" resultType="article.Article" parameterType="int">
+  SELECT * FROM article
+    WHERE article_id = '${articleId}'
+  </select>
   <insert id="insertArticle" parameterType="article.Article">
     INSERT INTO article ( title, writer, password, content, created_at, category_id)
       VALUES ("${title}", "${writer}", "${password}", "${content}", NOW(), ${categoryId})

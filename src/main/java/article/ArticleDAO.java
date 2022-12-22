@@ -1,7 +1,6 @@
 package article;
 
 import Logger.MyLogger;
-import com.sun.org.apache.bcel.internal.generic.ARETURN;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -33,6 +32,21 @@ public class ArticleDAO {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public Article getArticle(String articleId){
+		int parsedArticleId = Integer.parseInt(articleId);
+		try {
+			InputStream inputStream = Resources.getResourceAsStream(resource);
+			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
+			SqlSession session = sqlSessionFactory.openSession();
+			mapper = session.getMapper(ArticleMapper.class);
+			return mapper.getArticle(parsedArticleId);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
 	public void insertArticle(Article article) {
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);

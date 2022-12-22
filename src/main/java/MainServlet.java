@@ -42,9 +42,16 @@ public class MainServlet extends HttpServlet {
 		// GET 요청된 주소 로깅
 		logger.info("GET) : " + uri);
 
-		// DAO에서 게시글 목록/검색 결과를 받아 index로 보내는 요청/메소드
+		// DAO에서 게시글 목록/검색 결과를 받아 index로 포워딩하는 메소드
 		if(uri.equals("/selectArticles.action")){
 			getSelectArticles(request,response);
+		}
+		// id 에 맞춰 게시글 정보 받아온다음 article.jsp 로 포워딩하는 메소드
+		if (uri.equals("/viewPost.action")){
+			String articleId = request.getParameter("id");
+			Article article = new ArticleDAO().getArticle(articleId);
+			request.setAttribute("article",article);
+			request.getRequestDispatcher("article.jsp?id="+articleId).forward(request, response);
 		}
 	}
 

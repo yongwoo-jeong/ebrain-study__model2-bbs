@@ -1,5 +1,4 @@
-<%@ page import="post.PostDAO" %>
-<%@ page import="post.Post" %><%--
+<%@ page import="article.Article" %><%--
   Created by IntelliJ IDEA.
   User: jyw
   Date: 2022/12/14
@@ -14,46 +13,44 @@
 </head>
 <body>
 <%
-    String id = request.getParameter("id");
-    PostDAO pd = new PostDAO();
-    Post po = pd.selectPost(Integer.parseInt(id));
+    Article article = (Article) request.getAttribute("article");
 %>
 <div class="container">
 <header class="header">게시판 - 보기</header>
 <div class="writer_time_row">
     <div class="writer_div">
-        <span><%=po.getWriter()%></span>
+        <span><%=article.getWriter()%></span>
     </div>
     <div>
         <span>등록일시</span>
-        <% if (po.getModified_at() == null){%>
-            <span><%=po.getCreated_at()%></span>
+        <% if (article.getModifiedAt() == null){%>
+            <span><%=article.getCreatedAt()%></span>
         <%} else {%>
-            <span><%=po.getCreated_at()%></span>
+            <span><%=article.getCreatedAt()%></span>
             <span>수정일시</span>
-            <span><%=po.getModified_at()%></span>
+            <span><%=article.getModifiedAt()%></span>
         <%}%>
     </div>
 </div>
     <div class="title_row">
         <div>
-            <% if (po.getCategory_id() == 1) {%>
+            <% if (article.getCategoryId() == 1) {%>
                 <span>[JAVA]</span>
-            <% } else if (po.getCategory_id() == 2) { %>
+            <% } else if (article.getCategoryId() == 2) { %>
                 <span>[Javascript]</span>
-            <% } else if (po.getCategory_id() == 3) {%>
+            <% } else if (article.getCategoryId() == 3) {%>
                 <span>[JAVA]</span>
             <% } %>
 
-            <span><%=po.getTitle()%></span>
+            <span><%=article.getTitle()%></span>
         </div>
         <div class="view">
             <span>조회수: </span>
-            <span><%=po.getView()%></span>
+            <span><%=article.getView()%></span>
         </div>
     </div>
     <div class="post_container">
-        <p><%=po.getContent()%></p>
+        <p><%=article.getContent()%></p>
     </div>
     <div class="file_container">
 <%--        <% if (po.getFile_id() == 0){%>--%>
@@ -67,7 +64,7 @@
             <div>댓글내용</div>
         </div>
         <div>
-            <form method="post" action=<%=request.getContextPath()%>/commentUploadAction.jsp?id=<%po.getPost_id();%> name="upload">
+            <form method="post" action=<%=request.getContextPath()%>/commentUploadAction.jsp?id=<%article.getArticleId();%> name="upload">
                 <input class="comment_input" type="text" placeholder="댓글을 입력해주세요" />
                 <input type="submit" class="save_button" value="저장" />
             </form>
@@ -75,7 +72,7 @@
     </div>
     <div class="button_set_container">
         <div class="button_set">
-            <a href="index.jsp" class="list_button">목록</a>
+            <a onclick="history.back();" class="list_button">목록</a>
             <a class="modi_del_btn">수정</a>
             <a class="modi_del_btn">삭제</a>
         </div>
