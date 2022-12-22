@@ -19,7 +19,7 @@
     <form method="get" action=<%=request.getContextPath()%>/selectArticles.action>
         <div class="search_nav">
             <div class="date_select_div">
-                <span>등록일</span>
+                <span class="date_span">등록일</span>
                 <input type="date" name="start_date" class="start_date"/>
                 <span>~</span>
                 <input type="date" name="last_date" class="end_date"/>
@@ -91,7 +91,9 @@
             <%if (i>lastPage) break;%>
             <%}%>
     </div>
+    <div class="upload_container">
     <button class="button upload_button" type="button" onclick="location.href='newArticleInput.jsp'">등록</button>
+    </div>
 </div>
 </body>
 </html>

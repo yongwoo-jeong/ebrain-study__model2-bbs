@@ -1,7 +1,7 @@
 @import "reset.css";
 
 .container{
-  margin: 50px 20px;
+  margin: 20px 20px;
   display: flex;
   flex-direction: column;
 }
@@ -34,9 +34,18 @@
   align-items: center;
 }
 
-.category_select_div select{
-  width: 50px;
+.date_select_div span{
+  margin: 0 15px;
+}
+
+.category_drop_down{
+  width: 150px;
   height: 20px;
+}
+
+.category_drop_down select{
+  width: 100%;
+  height: 100%;
 }
 
 .search_input_div{
@@ -44,7 +53,7 @@
 }
 
 .search_input_div input[type='text']{
-  width: 250px;
+  width: 350px;
   height: 20px;
 }
 
@@ -123,9 +132,14 @@ svg{
   color: gainsboro;
 }
 
+.upload_container{
+  display: flex;
+  justify-content: flex-end;
+}
+
 .upload_button{
-  margin-top: 40px;
-  width: 70px;
-  height: 30px;
+  margin-top: 10px;
+  width: 100px;
+  height: 35px;
   cursor: pointer;
 }
