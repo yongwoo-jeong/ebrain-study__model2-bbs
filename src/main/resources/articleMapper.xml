@@ -3,13 +3,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="article.ArticleMapper">
-  <select id="selectAllArticle" resultType="article.Article" parameterType="Integer">
+  <select id="selectAllArticle" resultType="article.Article" parameterType="Map">
     SELECT * FROM article
-    ORDER BY article_id DESC
-    LIMIT ${itemsFrom}, ${itemsFrom+10}
+      WHERE title like '%${keyword}%'
+      ORDER BY article_id DESC
+      LIMIT ${itemsFrom}, ${itemsFrom+10}
   </select>
   <insert id="insertArticle" parameterType="article.Article">
     INSERT INTO article ( title, writer, password, content, created_at, category_id)
-    values ("${title}", "${writer}", "${password}", "${content}", now(), ${categoryId})
+      VALUES ("${title}", "${writer}", "${password}", "${content}", NOW(), ${categoryId})
   </insert>
 </mapper>

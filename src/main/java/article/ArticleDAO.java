@@ -4,6 +4,7 @@ import Logger.MyLogger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,13 +18,13 @@ public class ArticleDAO {
 	SqlSessionFactory sqlSessionFactory;
 	ArticleMapper mapper;
 	MyLogger logger = MyLogger.getLogger();
-	public List<Article> selectAllArticle(int itemsFrom) {
+	public List<Article> selectAllArticle(Map selectMap) {
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 			SqlSession session = sqlSessionFactory.openSession();
 			mapper = session.getMapper(ArticleMapper.class);
-			List<Article> articleFromMapper = mapper.selectAllArticle(itemsFrom);
+			List<Article> articleFromMapper = mapper.selectAllArticle(selectMap);
 			session.close();
 			return articleFromMapper;
 		} catch (IOException e) {

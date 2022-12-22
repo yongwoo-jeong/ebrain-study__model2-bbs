@@ -1,5 +1,6 @@
 import Logger.MyLogger;
 import MatchCategory.FindCategoryNameId;
+import Util.PagingUtil;
 import article.Article;
 import article.ArticleDAO;
 import com.oreilly.servlet.MultipartRequest;
@@ -7,7 +8,9 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import java.io.*;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -55,30 +58,24 @@ public class MainServlet extends HttpServlet {
 
 	public void getSelectArticles(HttpServletRequest request, HttpServletResponse response){
 		try{
-			// index 페이지 page 파라미터값 가져오기
+			// 페이징을 위한 index 페이지 page 파라미터값 가져오기
 			String pageNumber = request.getParameter("page");
-			Integer parsedPageNumber;
+			Integer parsedPageNumber = new PagingUtil().main(pageNumber);
 			// page 파라미터가 null 인 경우
-			if(pageNumber ==null){
-				parsedPageNumber = 1;
-			} else{
-				// page 파라미터에 .action 이 딸려오기 때문에 제거
-				pageNumber = pageNumber.replaceAll(".action", "");
-				// 제거한 pageNumber 가 숫자로 구성된 스트링인지 확인
-				boolean isNumeric = pageNumber.matches("[+-]?\\d*(\\.\\d+)?");
-				// 숫자가 아닌 값이 들어왔을 경우 페이지 1로 보내기
-				if(!isNumeric){
-					parsedPageNumber = 1;
-				} else{
-					parsedPageNumber = Integer.parseInt(pageNumber);
-				}
-			}
 			// 게시글은 총 10개만 가져온다.
 			int itemsInPage = 10;
 			// 쿼리문에 LIMIT 을 주기 위한 값
 			int itemsFrom = (parsedPageNumber-1)*itemsInPage;
+			Map selectMap = new HashMap();
+			selectMap.put("itemsFrom", itemsFrom);
+
+			String category = request.getParameter("category");
+			String startDate = request.getParameter("start_date");
+			String lastDate = request.getParameter("last_date");
+			String keyword = request.getParameter("keyword");
+
 			ArticleDAO articleDAO = new ArticleDAO();
-			List<Article> selectedArticles = articleDAO.selectAllArticle(itemsFrom);
+			List<Article> selectedArticles = articleDAO.selectAllArticle(selectMap);
 			request.setAttribute("selectedArticles", selectedArticles);
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}catch (IOException e){

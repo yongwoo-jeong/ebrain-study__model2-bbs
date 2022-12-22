@@ -14,13 +14,13 @@
 <body>
 <div class="container">
     <header class="title"><h1>자유 게시판 - 목록</h1></header>
-    <div class="search_nav">
-        <form method="post" action=<%=request.getContextPath()%>/searchArticle.action>
+    <form method="get" action=<%=request.getContextPath()%>/selectArticles.action>
+        <div class="search_nav">
             <div class="date_select_div">
                 <span>등록일</span>
-                <input type="date" value="2022-12-01" name="start_date"/>
+                <input type="date" name="start_date"/>
                 <span>~</span>
-                <input type="date" value="2022-12-20"name="last_date"/>
+                <input type="date" name="last_date"/>
             </div>
             <div class="category_select_div">
                 <div class="category_drop_down">
@@ -37,13 +37,12 @@
             </div>
             <div class="search_input_div">
                 <div>
-                    <label>
-                        <input type="text" placeholder="검색어를 입력해주세요. (제목 + 작성자 + 내용)" />
-                    </label></div>
+                    <input type="text" name="keyword" placeholder="검색어를 입력해주세요. (제목 + 작성자 + 내용)" />
+                </div>
                 <input class="submit" type="submit" value="검색" />
-        </form>
+            </div>
         </div>
-    </div>
+    </form>
     <div class="search_outcome">총 512건</div>
     <div class="post_container">
         <div class="post">
