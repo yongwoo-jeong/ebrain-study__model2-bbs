@@ -1,4 +1,4 @@
-import Logger.MyLogger;
+import logger.MyLogger;
 import Util.FindCategoryNameId;
 import Util.ParamToIntegerUtil;
 import article.Article;
@@ -10,6 +10,7 @@ import comment.CommentDAO;
 import java.io.*;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -255,25 +256,18 @@ public class MainServlet extends HttpServlet {
 				Article newArticle = Article.builder().title(title).writer(writer)
 						.content(content).password(password).createdAt(sqlDate)
 						.categoryId(category_id).build();
-				ArticleDAO articleDAO = new ArticleDAO();
-				articleDAO.insertArticle(newArticle);
+				new ArticleDAO().insertArticle(newArticle);
+				// 매퍼의 selectKey 이용해 articleId 받아오기
 				Integer articleId = newArticle.getArticleId();
-				System.out.println(articleId);
-
-
-				// 게시글 먼저 INSERT 하고 파일 INSERT 해야할듯?
-				// 포스트ID 안전하게 받아올 방법....
-
-//				 첨부파일이 여러개일경우 enum을 통해 받아옴
-//				Enumeration files = multi.getFileNames();
-//				while (files.hasMoreElements()) {
-//					String param = (String) files.nextElement();
-//					String fileName = multi.getOriginalFileName(param);
-//					String filesystemName = multi.getFilesystemName(param);
-//					// 파일경로, articleId 받아와야함.
-//					if (fileName == null)
-//						continue;
-//				}
+				Enumeration files = multi.getFileNames();
+				while (files.hasMoreElements()) {
+					String file = (String) files.nextElement();
+					String fileName = multi.getOriginalFileName(file);
+					String filesystemName = multi.getFilesystemName(file);
+					// 파일경로, articleId 받아와야함.
+					if (fileName == null)
+						continue;
+				}
 				logger.info("New article has made");
 				// 등록됐을 경우 홈페이지로 리다이렉트
 				response.sendRedirect("/index.jsp");

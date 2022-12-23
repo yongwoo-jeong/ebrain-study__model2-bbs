@@ -46,5 +46,5 @@ ___
 - MyBatis config xml 작성할 때 드라이버를
   - org.mariadb.jdbc:mariadb-java-client:3.0.6로 입력해 드라이버세팅 불가했다.
   - org.mariadb.jdbc.Driver 로 고쳐주면서 해결
-- Logger 인스턴스로 콘솔에 로그띄워지지가 않음.
+- logger 인스턴스로 콘솔에 로그띄워지지가 않음.
 - 마이배티스 매퍼에서 createAt을 now() value가 아닌 파라미터 값으로 넣어주면 날짜가 1988로 변환돼 에러가 난다.
