@@ -43,7 +43,6 @@
             <% } else if (article.getCategoryId() == 3) {%>
                 <span>[JAVA]</span>
             <% } %>
-
             <span><%=article.getTitle()%></span>
         </div>
         <div class="view">
@@ -66,7 +65,6 @@
             for (Comment comment : commentList){
         %>
         <div class="comment_row">
-
             <div class="comment_date"><%=comment.getCreatedAt()%></div>
             <div><%=comment.getContent()%></div>
         </div>
