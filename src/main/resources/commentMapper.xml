@@ -8,7 +8,7 @@
       WHERE article_id = ${articleId}
   </select>
   <insert id="insertComment" parameterType="Map">
-    INSERT INTO comment ( content, created_at, articleId)
-    VALUES ("${content}", "${createdAt}", "${articleId}")
+    INSERT INTO comment ( content, created_at, article_id)
+    VALUES ("${content}", NOW(), "${articleId}")
   </insert>
 </mapper>

@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link rel="stylesheet" href="css/post.css">
+    <link rel="stylesheet" href="css/view_article.css">
     <title>Title</title>
 </head>
 <body>
@@ -61,19 +61,20 @@
 <%--        <%}%>--%>
     </div>
     <div class="comments_container">
+        <%
+            List<Comment> commentList = (List<Comment>) request.getAttribute("commentList");
+            for (Comment comment : commentList){
+        %>
         <div class="comment_row">
-            <%
-                List<Comment> commentList = (List<Comment>) request.getAttribute("commentList");
-				for (Comment comment : commentList){
-            %>
-            <div><%=comment.getCreatedAt()%></div>
+
+            <div class="comment_date"><%=comment.getCreatedAt()%></div>
             <div><%=comment.getContent()%></div>
-            <hr />
-            <% } %>
         </div>
+        <% } %>
         <div>
-            <form method="post" action=<%=request.getContextPath()%>/commentUploadAction.jsp?id=<%article.getArticleId();%> name="upload">
-                <input class="comment_input" type="text" placeholder="댓글을 입력해주세요" />
+        <%-- 굳이 포스트방식으로해야하나?--%>
+            <form method="post" action=<%=request.getContextPath()%>/commentInsert.action?id=<%=article.getArticleId()%> name="uploadComment">
+                <input name="new_comment" class="comment_input" type="text" placeholder="댓글을 입력해주세요" />
                 <input type="submit" class="save_button" value="저장" />
             </form>
         </div>

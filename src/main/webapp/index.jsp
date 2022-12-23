@@ -2,6 +2,7 @@
 <%@ page import="article.Article" %>
 <%@ page import="java.net.URL" %>
 <%@ page import="java.net.HttpURLConnection" %>
+<%@ page import="Util.FindCategoryNameId" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -47,7 +48,7 @@
     </form>
     <div class="search_outcome">총 <%=totalArticle%>건</div>
     <div class="post_container">
-        <div class="post">
+        <div class="post post_outline">
             <span>카테고리</span>
             <a class="post_title">제목</a>
             <span>작성자</span>
@@ -66,7 +67,7 @@
             <% for(Article article : articles) {
         %>
         <div class="post">
-            <span class="post_category"><%= article.getCategoryId() %></span>
+            <span class="post_category"><%= new FindCategoryNameId().findCategoryName(article.getCategoryId())%></span>
             <%--            <% System.out.println(po.getFile_id());%>--%>
             <%--            <% if ( true ){%>--%>
             <%--            <svg></svg>--%>

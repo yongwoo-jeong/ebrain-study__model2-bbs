@@ -36,6 +36,7 @@ public class MainServlet extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 		// 요청이 들어오는 식별자 확인
 		String uri = request.getRequestURI();
@@ -47,7 +48,7 @@ public class MainServlet extends HttpServlet {
 		if(uri.equals("/selectArticles.action")){
 			getSelectArticles(request,response);
 		}
-		// id 에 맞춰 게시글/댓글 정보 받아온다음 article.jsp 로 포워딩하는 메소드
+		// id 에 맞춰 게시글/댓글 정보 받아온다음 viewArticle.jsp 로 포워딩하는 메소드
 		if (uri.equals("/viewPost.action")){
 			// 쿼리스트링 파라미터 받아온 다음
 			String articleId = request.getParameter("id");
@@ -57,7 +58,7 @@ public class MainServlet extends HttpServlet {
 			request.setAttribute("article",article);
 			List<Comment> commentList = new CommentDAO().selectComments(articleId);
 			request.setAttribute("commentList",commentList);
-			request.getRequestDispatcher("article.jsp?id="+articleId).forward(request, response);
+			request.getRequestDispatcher("viewArticle.jsp?id="+articleId).forward(request, response);
 		}
 	}
 
@@ -72,6 +73,7 @@ public class MainServlet extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException,ServletException {
+		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 		String uri = request.getRequestURI();
 		MyLogger LOG = MyLogger.getLogger();
@@ -82,7 +84,14 @@ public class MainServlet extends HttpServlet {
 			postInsertArticle(request,response);
 		}
 		// commentDAO 통해 댓글 등록하는 메서드
-		if (uri.equals("/commentUploadAction.jsp")){
+		if (uri.equals("/commentInsert.action")){
+
+			String newCommentContent = request.getParameter("new_comment");
+			String onArticleId = request.getParameter("id");
+			HashMap<String,String> mapForInsertComment = new HashMap<>();
+			mapForInsertComment.put("content",newCommentContent);
+			mapForInsertComment.put("articleId",onArticleId);
+			new CommentDAO().insertComment(mapForInsertComment);
 
 		}
 	}
