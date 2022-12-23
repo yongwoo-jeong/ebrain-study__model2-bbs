@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface ArticleMapper {
-	List<Article> selectAllArticle(Map map);
-	Integer insertArticle(Article article);
+	List<ArticleVO> selectAllArticle(Map map);
+	Integer insertArticle(ArticleVO articleVO);
 
-	Article getArticle(int articleId);
+	ArticleVO getArticle(int articleId);
 }

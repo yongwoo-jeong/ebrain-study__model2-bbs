@@ -1,4 +1,4 @@
-CREATE TABLE `article` (
+CREATE TABLE `articleVO` (
                            `article_id`	INT(11) NOT NULL auto_increment,
                            `title`	VARCHAR(100)	NOT NULL,
                            `writer`	VARCHAR(4)	NOT NULL,
@@ -13,13 +13,13 @@ CREATE TABLE `article` (
 #                        만약 카테고리 ID가 삭제된다면? 일단 null로 만들기
 );
 
-CREATE TABLE `comment` (
+CREATE TABLE `commentVO` (
                            `comment_id`	INT(11) NOT NULL auto_increment,
                            `content`	VARCHAR(255)	NOT NULL,
                            `created_at`	DATETIME	NOT NULL,
                            `article_id`	INT(11)	NOT NULL,
                             primary key (`comment_id`),
-                            foreign key (`article_id`) references article (`article_id`)
+                            foreign key (`article_id`) references articleVO (`article_id`)
 );
 
 CREATE TABLE `category` (
@@ -34,6 +34,6 @@ CREATE TABLE `file` (
                         `name_original`	VARCHAR(100)	NOT NULL,
                         `article_id`	INT(11)	NOT NULL,
                         primary key (`file_uuid`),
-                        foreign key (`article_id`) references article (`article_id`)
+                        foreign key (`article_id`) references articleVO (`article_id`)
 );
 

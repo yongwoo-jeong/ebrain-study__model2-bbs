@@ -18,22 +18,22 @@ public class ArticleDAO {
 	SqlSessionFactory sqlSessionFactory;
 	ArticleMapper mapper;
 	MyLogger logger = MyLogger.getLogger();
-	public List<Article> selectAllArticle(Map selectMap) {
+	public List<ArticleVO> selectAllArticle(Map selectMap) {
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 			SqlSession session = sqlSessionFactory.openSession();
 			mapper = session.getMapper(ArticleMapper.class);
-			List<Article> articleFromMapper = mapper.selectAllArticle(selectMap);
+			List<ArticleVO> articleVOFromMapper = mapper.selectAllArticle(selectMap);
 			session.close();
-			return articleFromMapper;
+			return articleVOFromMapper;
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
 
-	public Article getArticle(String articleId){
+	public ArticleVO getArticle(String articleId){
 		int parsedArticleId = Integer.parseInt(articleId);
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
@@ -47,14 +47,14 @@ public class ArticleDAO {
 		}
 	}
 
-	public int insertArticle(Article article) {
+	public int insertArticle(ArticleVO articleVO) {
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 			SqlSession session = sqlSessionFactory.openSession();
 			mapper = session.getMapper(ArticleMapper.class);
 			// String title, String writer,String password,Integer view, String content, Date created_at,Integer category_id
-			mapper.insertArticle(article);
+			mapper.insertArticle(articleVO);
 			session.commit();
 			session.close();
 		} catch (IOException e) {

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Comment {
+public class CommentVO {
 	private Integer commentId;
 	@NonNull
 	private String content;

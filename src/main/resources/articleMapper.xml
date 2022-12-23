@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="article.ArticleMapper">
-  <select id="selectAllArticle" resultType="article.Article" parameterType="Map">
+  <select id="selectAllArticle" resultType="article.ArticleVO" parameterType="Map">
     SELECT * FROM article
       WHERE title like '%${keyword}%' AND
             category_id IN <foreach item="category" index="index" collection="categories"
@@ -21,12 +21,12 @@
       ORDER BY article_id DESC
       LIMIT ${articleLimitFrom}, ${articleLimitTo}
   </select>
-  <select id="getArticle" resultType="article.Article" parameterType="int">
+  <select id="getArticle" resultType="article.ArticleVO" parameterType="int">
   SELECT * FROM article
     WHERE article_id = '${articleId}'
   </select>
 
-  <insert id="insertArticle" parameterType="article.Article" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertArticle" parameterType="article.ArticleVO" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO article ( title, writer, password, content, created_at, category_id)
       VALUES ("${title}", "${writer}", "${password}", "${content}", NOW(), ${categoryId})
     <selectKey keyProperty="articleId" resultType="Integer" order="AFTER">

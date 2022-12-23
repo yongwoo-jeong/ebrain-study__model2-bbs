@@ -14,16 +14,16 @@ public class CommentDAO {
 	SqlSessionFactory sqlSessionFactory;
 	CommentMapper mapper;
 
-	public List<Comment> selectComments(String id) {
+	public List<CommentVO> selectComments(String id) {
 		int articleId = Integer.parseInt(id);
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 			SqlSession session = sqlSessionFactory.openSession();
 			mapper = session.getMapper(CommentMapper.class);
-			List<Comment> commentOnArticle = mapper.selectComments(articleId);
+			List<CommentVO> commentVOOnArticle = mapper.selectComments(articleId);
 			session.close();
-			return commentOnArticle;
+			return commentVOOnArticle;
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);

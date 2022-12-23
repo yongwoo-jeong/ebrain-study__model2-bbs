@@ -1,8 +1,7 @@
 <%@ page import="java.util.List" %>
-<%@ page import="article.Article" %>
-<%@ page import="java.net.URL" %>
-<%@ page import="java.net.HttpURLConnection" %>
+<%@ page import="article.ArticleVO" %>
 <%@ page import="Util.FindCategoryNameId" %>
+<%@ page import="article.ArticleVO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -58,13 +57,13 @@
         </div>
         <%
             // articles 데이터 가져오기
-            List<Article> articles = (List<Article>) request.getAttribute("selectedArticles");
+            List<ArticleVO> articles = (List<ArticleVO>) request.getAttribute("selectedArticles");
             // 첫 접속으로 articles 가 불러와지지 않았을때
 			if(articles == null){ %>
                 <%-- 서블릿에서 받아올수있도록 getArticles.action으로 포워딩           --%>
                 <jsp:forward page="/selectArticles.action" />
             <%} %>
-            <% for(Article article : articles) {
+            <% for(ArticleVO article : articles) {
         %>
         <div class="post">
             <span class="post_category"><%= new FindCategoryNameId().findCategoryName(article.getCategoryId())%></span>
@@ -76,7 +75,8 @@
             <%--              <path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd" />--%>
             <%--            </svg>--%>
             <%--            <%}%>--%>
-            <a class="post_title" href="/viewPost.action?id=<%= article.getArticleId()%>"><%=(article.getTitle().length() > 20) ? article.getTitle().substring(0,20)+"..." : article.getTitle()%></a>
+            <a class="post_title" href="/viewPost.action?id=<%= article.getArticleId()%>"><%=(
+                    article.getTitle().length() > 20) ? article.getTitle().substring(0,20)+"..." : article.getTitle()%></a>
             <span><%=article.getWriter()%></span>
             <span class="view_span"><%=article.getView()%></span>
             <span><%=article.getCreatedAt()%></span>

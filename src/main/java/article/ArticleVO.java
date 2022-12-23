@@ -12,7 +12,7 @@ import lombok.Setter;
 /**
  * 게시글 DAO
  */
-public class Article {
+public class ArticleVO {
 	/**
 	 * 게시글
 	 * id INT(11) - 프라이머리키

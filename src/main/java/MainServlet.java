@@ -1,11 +1,13 @@
+import article.ArticleVO;
+import comment.CommentVO;
+import file.FileDAO;
+import file.FileVO;
 import logger.MyLogger;
 import Util.FindCategoryNameId;
 import Util.ParamToIntegerUtil;
-import article.Article;
 import article.ArticleDAO;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
-import comment.Comment;
 import comment.CommentDAO;
 import java.io.*;
 import java.sql.Date;
@@ -54,11 +56,11 @@ public class MainServlet extends HttpServlet {
 			// 쿼리스트링 파라미터 받아온 다음
 			String articleId = request.getParameter("id");
 			// 해당 게시글을 DAO 통해 받아옴
-			Article article = new ArticleDAO().getArticle(articleId);
+			ArticleVO article = new ArticleDAO().getArticle(articleId);
 			// 이를 req 객체 애트리뷰트에 담아서 포워딩
-			request.setAttribute("article",article);
-			List<Comment> commentList = new CommentDAO().selectComments(articleId);
-			request.setAttribute("commentList",commentList);
+			request.setAttribute("article", article);
+			List<CommentVO> commentList = new CommentDAO().selectComments(articleId);
+			request.setAttribute("commentList", commentList);
 			request.getRequestDispatcher("viewArticle.jsp?id="+articleId).forward(request, response);
 		}
 	}
@@ -157,7 +159,7 @@ public class MainServlet extends HttpServlet {
 			totalSelectMap.put("endDate",endDate);
 			// DAO 통해 Article SELECT 로 검색 결과 조회
 			ArticleDAO articleDAO = new ArticleDAO();
-			List<Article> selectedArticles = articleDAO.selectAllArticle(selectMap);
+			List<ArticleVO> selectedArticles = articleDAO.selectAllArticle(selectMap);
 			// 전체 검색 건수를 표현하기 위한 변수
 			Integer totalArticle = articleDAO.selectAllArticle(totalSelectMap).size();
 
@@ -253,7 +255,7 @@ public class MainServlet extends HttpServlet {
 				LocalDateTime currentDateTime = LocalDateTime.now();
 				Date sqlDate = Date.valueOf(currentDateTime.toLocalDate());
 				// 앞서 받은 Form 데이터를 통해 Article 만듦
-				Article newArticle = Article.builder().title(title).writer(writer)
+				ArticleVO newArticle = ArticleVO.builder().title(title).writer(writer)
 						.content(content).password(password).createdAt(sqlDate)
 						.categoryId(category_id).build();
 				new ArticleDAO().insertArticle(newArticle);
@@ -263,10 +265,15 @@ public class MainServlet extends HttpServlet {
 				while (files.hasMoreElements()) {
 					String file = (String) files.nextElement();
 					String fileName = multi.getOriginalFileName(file);
-					String filesystemName = multi.getFilesystemName(file);
-					// 파일경로, articleId 받아와야함.
 					if (fileName == null)
 						continue;
+					String filesystemName = multi.getFilesystemName(file);
+					FileVO newFile = FileVO.builder().
+							nameOnServer(filesystemName).nameOriginal(fileName).
+							filePath(uploadPath).articleId(articleId)
+							.build();
+					new FileDAO().insertFile(newFile);
+					System.out.println(fileName+"has been uploaded");
 				}
 				logger.info("New article has made");
 				// 등록됐을 경우 홈페이지로 리다이렉트
