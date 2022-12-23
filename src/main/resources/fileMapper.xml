@@ -3,10 +3,10 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="file.FileMapper">
-<!--  <select id="selectComments" parameterType="int" resultType="comment.CommentVO">-->
-<!--    SELECT * FROM commentVO-->
-<!--    WHERE article_id = ${articleId}-->
-<!--  </select>-->
+  <select id="selectFiles" parameterType="int" resultType="file.FileVO">
+    SELECT * FROM file
+    WHERE article_id = ${articleId}
+  </select>
   <insert id="insertFile" parameterType="Map">
     INSERT INTO file ( file_uuid, name_on_server, name_original, article_id, file_path)
     VALUES (  UNHEX(REPLACE(UUID(),'-','')),"${nameOnServer}", "${nameOriginal}", ${articleId}, "${filePath}" )

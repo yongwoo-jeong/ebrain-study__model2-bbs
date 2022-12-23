@@ -51,7 +51,8 @@ public class MainServlet extends HttpServlet {
 		if(uri.equals("/selectArticles.action")){
 			getSelectArticles(request,response);
 		}
-		// id 에 맞춰 게시글/댓글 정보 받아온다음 viewArticle.jsp 로 포워딩하는 메소드
+
+		// id 에 맞춰 게시글/첨부파일/댓글 정보 받아온다음 viewArticle.jsp 로 포워딩하는 메소드
 		if (uri.equals("/viewPost.action")){
 			// 쿼리스트링 파라미터 받아온 다음
 			String articleId = request.getParameter("id");
@@ -61,6 +62,7 @@ public class MainServlet extends HttpServlet {
 			request.setAttribute("article", article);
 			List<CommentVO> commentList = new CommentDAO().selectComments(articleId);
 			request.setAttribute("commentList", commentList);
+			
 			request.getRequestDispatcher("viewArticle.jsp?id="+articleId).forward(request, response);
 		}
 	}
