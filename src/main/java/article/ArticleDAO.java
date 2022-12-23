@@ -47,7 +47,7 @@ public class ArticleDAO {
 		}
 	}
 
-	public void insertArticle(Article article) {
+	public int insertArticle(Article article) {
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
@@ -60,5 +60,6 @@ public class ArticleDAO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return 0;
 	}
 }

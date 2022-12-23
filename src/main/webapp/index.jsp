@@ -78,7 +78,7 @@
             <%--            <%}%>--%>
             <a class="post_title" href="/viewPost.action?id=<%= article.getArticleId()%>"><%=(article.getTitle().length() > 20) ? article.getTitle().substring(0,20)+"..." : article.getTitle()%></a>
             <span><%=article.getWriter()%></span>
-            <span><%=article.getView()%></span>
+            <span class="view_span"><%=article.getView()%></span>
             <span><%=article.getCreatedAt()%></span>
             <span></span>
         </div>

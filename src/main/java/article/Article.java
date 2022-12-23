@@ -65,5 +65,4 @@ public class Article {
 	 */
 	@NonNull
 	private Integer categoryId;
-
 }

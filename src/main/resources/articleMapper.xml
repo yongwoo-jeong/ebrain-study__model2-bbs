@@ -26,8 +26,11 @@
     WHERE article_id = '${articleId}'
   </select>
 
-  <insert id="insertArticle" parameterType="article.Article">
+  <insert id="insertArticle" parameterType="article.Article" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO article ( title, writer, password, content, created_at, category_id)
       VALUES ("${title}", "${writer}", "${password}", "${content}", NOW(), ${categoryId})
+    <selectKey keyProperty="articleId" resultType="Integer" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
   </insert>
 </mapper>

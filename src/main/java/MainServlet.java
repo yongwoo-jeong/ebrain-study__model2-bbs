@@ -216,16 +216,15 @@ public class MainServlet extends HttpServlet {
 			String password_confirm = multi.getParameter("password_confirm");
 			// 유효성 검증을 위한 밸리데이션 값
 			Boolean validation = true;
-			// equals 이렇게쓰면 안됐던것같은데..
-
 			// 검증 실패하는 경우 모음
 			// 카테고리 선택 안됐을 경우
+			// equals 이렇게쓰면 안됐던것같은데..
 			if (category.equals("")) {
-				logger.warning("No category");
+				logger.warning("Category not selected");
 				validation = false;
 			}
 			//Form data 길이 요건을 충족하지 않는 경우
-			if (writer.length() != 3 && title.length() != 4) {
+			if (writer.length() != 3 && writer.length() != 4) {
 				logger.warning("Writer length out of range");
 				validation = false;
 			}
@@ -258,6 +257,10 @@ public class MainServlet extends HttpServlet {
 						.categoryId(category_id).build();
 				ArticleDAO articleDAO = new ArticleDAO();
 				articleDAO.insertArticle(newArticle);
+				Integer articleId = newArticle.getArticleId();
+				System.out.println(articleId);
+
+
 				// 게시글 먼저 INSERT 하고 파일 INSERT 해야할듯?
 				// 포스트ID 안전하게 받아올 방법....
 
