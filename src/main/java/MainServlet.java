@@ -260,8 +260,10 @@ public class MainServlet extends HttpServlet {
 						.categoryId(category_id).build();
 				new ArticleDAO().insertArticle(newArticle);
 				// 매퍼의 selectKey 이용해 articleId 받아오기
+				System.out.println("Before Files");
 				Integer articleId = newArticle.getArticleId();
 				Enumeration files = multi.getFileNames();
+				System.out.println(files);
 				while (files.hasMoreElements()) {
 					String file = (String) files.nextElement();
 					String fileName = multi.getOriginalFileName(file);
@@ -272,6 +274,7 @@ public class MainServlet extends HttpServlet {
 							nameOnServer(filesystemName).nameOriginal(fileName).
 							filePath(uploadPath).articleId(articleId)
 							.build();
+					System.out.println(newFile);
 					new FileDAO().insertFile(newFile);
 					System.out.println(fileName+"has been uploaded");
 				}
