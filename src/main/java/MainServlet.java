@@ -95,7 +95,7 @@ public class MainServlet extends HttpServlet {
 			mapForInsertComment.put("content",newCommentContent);
 			mapForInsertComment.put("articleId",onArticleId);
 			new CommentDAO().insertComment(mapForInsertComment);
-
+			response.sendRedirect("/viewPost.action?id="+onArticleId);
 		}
 	}
 
