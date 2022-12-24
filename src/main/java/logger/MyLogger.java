@@ -14,10 +14,16 @@ public class MyLogger {
 	public static MyLogger getLogger(){
 		return instance;
 	}
+	/**
+	 * 실행중인 클래스 이름을 취득
+	 * @return 클래스명
+	 */
+	public static String getClassName() {
+		return Thread.currentThread().getStackTrace()[2].getClassName();
+	}
 	public void info(String msg){
 		logger.fine(msg);
 	}
-
 	public void warning(String msg){
 		logger.warning(msg);
 	}
