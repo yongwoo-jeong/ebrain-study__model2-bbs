@@ -2,7 +2,8 @@
 <%@ page import="comment.CommentVO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="comment.CommentVO" %>
-<%@ page import="article.ArticleVO" %><%--
+<%@ page import="article.ArticleVO" %>
+<%@ page import="file.FileVO" %><%--
   Created by IntelliJ IDEA.
   User: jyw
   Date: 2022/12/14
@@ -56,10 +57,16 @@
         <p><%=article.getContent()%></p>
     </div>
     <div class="file_container">
-<%--        <% if (po.getFile_id() == 0){%>--%>
-<%--        <%} else {%>--%>
-        <a>첨부파일 있을경우 이름</a>
-<%--        <%}%>--%>
+        <%
+            List<FileVO> FileList = (List<FileVO>) request.getAttribute("fileList");
+            for (FileVO file : FileList){
+        %>
+        <div class="file">
+            <a href=download.action?file_id=<%=file.getFileUuid()%>>
+                <%=file.getNameOriginal()%>
+            </a>
+        </div>
+        <% }%>
     </div>
     <div class="comments_container">
         <%
@@ -72,7 +79,6 @@
         </div>
         <% } %>
         <div>
-        <%-- 굳이 포스트방식으로해야하나?--%>
             <form method="post" action=<%=request.getContextPath()%>/commentInsert.action?id=<%=article.getArticleId()%> name="uploadComment">
                 <input name="new_comment" class="comment_input" type="text" placeholder="댓글을 입력해주세요" />
                 <input type="submit" class="save_button" value="저장" />

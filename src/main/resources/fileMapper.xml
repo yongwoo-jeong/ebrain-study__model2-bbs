@@ -5,10 +5,14 @@
 <mapper namespace="file.FileMapper">
   <select id="selectFiles" parameterType="int" resultType="file.FileVO">
     SELECT * FROM file
-    WHERE article_id = ${articleId}
+      WHERE article_id = ${articleId}
+  </select>
+  <select id="selectForDownload" parameterType="String" resultType="file.FileVO">
+    SELECT * FROM file
+    WHERE file_uuid = '${fileUuid}'
   </select>
   <insert id="insertFile" parameterType="Map">
     INSERT INTO file ( file_uuid, name_on_server, name_original, article_id, file_path)
-    VALUES (  UNHEX(REPLACE(UUID(),'-','')),"${nameOnServer}", "${nameOriginal}", ${articleId}, "${filePath}" )
+    VALUES (  UNHEX(REPLACE(UUID(),'-','')), "${nameOnServer}", "${nameOriginal}", ${articleId}, "${filePath}" )
   </insert>
 </mapper>

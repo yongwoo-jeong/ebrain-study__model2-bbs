@@ -15,14 +15,22 @@ public class FileDAO{
 	SqlSessionFactory sqlSessionFactory;
 	FileMapper mapper;
 
-	public List<FileVO> selectFiles(int articleId) throws IOException {
+	public List<FileVO> selectFiles(String articleId) throws IOException {
 		InputStream inputStream = Resources.getResourceAsStream(resource);
 		sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 		SqlSession session = sqlSessionFactory.openSession();
 		mapper = session.getMapper(FileMapper.class);
-		return mapper.selectFiles(articleId);
+		return mapper.selectFiles(Integer.parseInt(articleId));
 	}
-	
+
+	public FileVO selectForDownload(String uuid) throws IOException {
+		InputStream inputStream = Resources.getResourceAsStream(resource);
+		sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
+		SqlSession session = sqlSessionFactory.openSession();
+		mapper = session.getMapper(FileMapper.class);
+		return mapper.selectForDownload(uuid);
+	}
+
 	public void insertFile(FileVO newFile) throws IOException {
 		InputStream inputStream = Resources.getResourceAsStream(resource);
 		sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);

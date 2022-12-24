@@ -1,7 +1,12 @@
+import static java.lang.System.in;
+
 import article.ArticleVO;
 import comment.CommentVO;
 import file.FileDAO;
 import file.FileVO;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import logger.MyLogger;
 import Util.FindCategoryNameId;
 import Util.ParamToIntegerUtil;
@@ -62,8 +67,31 @@ public class MainServlet extends HttpServlet {
 			request.setAttribute("article", article);
 			List<CommentVO> commentList = new CommentDAO().selectComments(articleId);
 			request.setAttribute("commentList", commentList);
-			
+			List<FileVO> fileList = new FileDAO().selectFiles(articleId);
+			request.setAttribute("fileList",fileList);
 			request.getRequestDispatcher("viewArticle.jsp?id="+articleId).forward(request, response);
+		}
+
+		// 쿼리스트링으로 UUID 받아와 DB에서 경로, 파일명을 구한 뒤 파일 다운로드 제공
+		if(uri.equals("/download.action")){
+			String fileUuid = request.getParameter("file_id");
+			FileVO targetFile = new FileDAO().selectForDownload(fileUuid);
+			String filePath = targetFile.getFilePath();
+			String fileName = targetFile.getNameOnServer();
+			File fileDownload = new File(filePath,fileName);
+			FileInputStream fileInputStream = new FileInputStream(fileDownload);
+			fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+			response.setContentType("application/octet-stream; charset=utf-8");
+			response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+			OutputStream out = response.getOutputStream();
+			int length;
+			byte[] b = new byte[fileName.length()];
+			while ((length = fileInputStream.read(b))>0){
+				out.write(b,0,length);
+			}
+			out.flush();
+			out.close();
+			fileInputStream.close();
 		}
 	}
 
@@ -113,6 +141,7 @@ public class MainServlet extends HttpServlet {
 	 */
 	public void getSelectArticles(HttpServletRequest request, HttpServletResponse response){
 		try{
+			System.out.println(request.getSession());
 			// 검색 SELECT 매퍼 parameter 로 담을 Map - 카테고리, 키워드, 날짜, 페이징 숫자
 			Map selectMap = new HashMap();
 			// 총 검색건을 세기 위한 Map
@@ -207,7 +236,7 @@ public class MainServlet extends HttpServlet {
 		String encType = "utf-8";
 		int maxSize = 5 * 1024 * 1024;
 		// 첨부파일이 저장되는 경로
-		String uploadPath = request.getSession().getServletContext().getRealPath("/file");
+		String uploadPath = "/Users/jyw/Desktop/project/java/ebrain-study__model2-bbs/apache-tomcat-9.0.10/file";
 		MultipartRequest multi;
 		try {
 			multi = new MultipartRequest(request, uploadPath, maxSize, encType,
@@ -262,23 +291,24 @@ public class MainServlet extends HttpServlet {
 						.categoryId(category_id).build();
 				new ArticleDAO().insertArticle(newArticle);
 				// 매퍼의 selectKey 이용해 articleId 받아오기
-				System.out.println("Before Files");
 				Integer articleId = newArticle.getArticleId();
 				Enumeration files = multi.getFileNames();
-				System.out.println(files);
 				while (files.hasMoreElements()) {
 					String file = (String) files.nextElement();
+					System.out.println("file:"+file);
 					String fileName = multi.getOriginalFileName(file);
+					System.out.println("Filename ="+fileName);
+					String filesystemName = multi.getFilesystemName(file);
+					System.out.println(filesystemName);
 					if (fileName == null)
 						continue;
-					String filesystemName = multi.getFilesystemName(file);
+//					String filesystemName = multi.getFilesystemName(file);
 					FileVO newFile = FileVO.builder().
 							nameOnServer(filesystemName).nameOriginal(fileName).
 							filePath(uploadPath).articleId(articleId)
 							.build();
-					System.out.println(newFile);
+					System.out.println("file build OK");
 					new FileDAO().insertFile(newFile);
-					System.out.println(fileName+"has been uploaded");
 				}
 				logger.info("New article has made");
 				// 등록됐을 경우 홈페이지로 리다이렉트
