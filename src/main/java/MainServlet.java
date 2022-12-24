@@ -1,12 +1,8 @@
-import static java.lang.System.in;
-
 import article.ArticleVO;
 import comment.CommentVO;
 import file.FileDAO;
 import file.FileVO;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import logger.MyLogger;
 import Util.FindCategoryNameId;
 import Util.ParamToIntegerUtil;
@@ -39,7 +35,6 @@ public class MainServlet extends HttpServlet {
 	 * root path(/) 뒤 경로를 받아 매칭되는 메소드에서 처리
 	 * request, response 받아 개별 URL에 따른 메소드들로 다시 전달
 	 * @param request   HttpServletRequest. 개별 URL을 처리하는 메소드의 파라미터로 다시 전달 됨
-	 *
 	 * @param response  HttpServletResponse. 개별 URL을 처리하는 메소드의 파라미터로 다시 전달 됨
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -51,57 +46,25 @@ public class MainServlet extends HttpServlet {
 		MyLogger LOG = MyLogger.getLogger();
 		// GET 요청된 주소 로깅
 		logger.info("GET) : " + uri);
-
 		// DAO에서 게시글 목록/검색 결과를 받아 index로 포워딩하는 메소드
 		if(uri.equals("/selectArticles.action")){
 			getSelectArticles(request,response);
 		}
-
 		// id 에 맞춰 게시글/첨부파일/댓글 정보 받아온다음 viewArticle.jsp 로 포워딩하는 메소드
-		if (uri.equals("/viewPost.action")){
-			// 쿼리스트링 파라미터 받아온 다음
-			String articleId = request.getParameter("id");
-			// 해당 게시글을 DAO 통해 받아옴
-			ArticleVO article = new ArticleDAO().getArticle(articleId);
-			// 이를 req 객체 애트리뷰트에 담아서 포워딩
-			request.setAttribute("article", article);
-			List<CommentVO> commentList = new CommentDAO().selectComments(articleId);
-			request.setAttribute("commentList", commentList);
-			List<FileVO> fileList = new FileDAO().selectFiles(articleId);
-			request.setAttribute("fileList",fileList);
-			request.getRequestDispatcher("viewArticle.jsp?id="+articleId).forward(request, response);
+		if (uri.equals("/viewArticle.action")){
+			getSelectArticle(request,response);
 		}
-
 		// 쿼리스트링으로 UUID 받아와 DB에서 경로, 파일명을 구한 뒤 파일 다운로드 제공
 		if(uri.equals("/download.action")){
-			String fileUuid = request.getParameter("file_id");
-			FileVO targetFile = new FileDAO().selectForDownload(fileUuid);
-			String filePath = targetFile.getFilePath();
-			String fileName = targetFile.getNameOnServer();
-			File fileDownload = new File(filePath,fileName);
-			FileInputStream fileInputStream = new FileInputStream(fileDownload);
-			fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-			response.setContentType("application/octet-stream; charset=utf-8");
-			response.setHeader("Content-Disposition", "attachment; filename="+fileName);
-			OutputStream out = response.getOutputStream();
-			int length;
-			byte[] b = new byte[fileName.length()];
-			while ((length = fileInputStream.read(b))>0){
-				out.write(b,0,length);
-			}
-			out.flush();
-			out.close();
-			fileInputStream.close();
+			getFileDownload(request,response);
 		}
 	}
 
 	/**
-	 /**
 	 * 모든 POST 요청을 처리
 	 * root path(/) 뒤 경로를 받아 매칭되는 메소드에서 처리
 	 * request, response 받아 개별 URL에 따른 메소드들로 다시 전달
 	 * @param request   HttpServletRequest. 개별 URL을 처리하는 메소드의 파라미터로 다시 전달 됨
-	 *
 	 * @param response  HttpServletResponse. 개별 URL을 처리하는 메소드의 파라미터로 다시 전달 됨
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -118,19 +81,68 @@ public class MainServlet extends HttpServlet {
 		}
 		// commentDAO 통해 댓글 등록하는 메서드
 		if (uri.equals("/commentInsert.action")){
-
-			String newCommentContent = request.getParameter("new_comment");
-			String onArticleId = request.getParameter("id");
-			HashMap<String,String> mapForInsertComment = new HashMap<>();
-			mapForInsertComment.put("content",newCommentContent);
-			mapForInsertComment.put("articleId",onArticleId);
-			new CommentDAO().insertComment(mapForInsertComment);
-			response.sendRedirect("/viewPost.action?id="+onArticleId);
+			postInsertComment(request,response);
 		}
 	}
 
-	public void destroy() {
+	/**
+	 * 파일 다운로드를 위한 메서드
+	 * @param request
+	 * @param response
+	 */
+	private void getFileDownload(HttpServletRequest request, HttpServletResponse response) {
+		try{
+			String fileUuid = request.getParameter("file_id");
+			FileVO targetFile = new FileDAO().selectForDownload(fileUuid);
+			String filePath = targetFile.getFilePath();
+			String fileName = targetFile.getNameOnServer();
+			File fileDownload = new File(filePath, fileName);
+			FileInputStream fileInputStream = null;
+			fileInputStream = new FileInputStream(fileDownload);
+			fileName = new String(fileName.getBytes(StandardCharsets.UTF_8),
+					StandardCharsets.ISO_8859_1);
+			response.setContentType("application/octet-stream; charset=utf-8");
+			response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+			OutputStream out = response.getOutputStream();
+			int length;
+			byte[] b = new byte[fileName.length()];
+			while ((length = fileInputStream.read(b)) > 0) {
+				out.write(b, 0, length);
+			}
+			out.flush();
+			out.close();
+			fileInputStream.close();
+		} catch (IOException e){
+			String currentClass = MyLogger.getClassName();
+			logger.severe(currentClass+e);
+		}
 	}
+
+	/**
+	 * 인덱스 페이지에서 검색결과, 혹은 전체 게시글을 보여주기 위한 메서드
+	 * @param request
+	 * @param response
+	 */
+	private void getSelectArticle(HttpServletRequest request, HttpServletResponse response) {
+		try{
+			String articleId = request.getParameter("id");
+			// 쿼리스트링 파라미터 받아온 다음
+			// 해당 게시글을 DAO 통해 받아옴
+			ArticleVO article = new ArticleDAO().getArticle(articleId);
+			// 이를 req 객체 애트리뷰트에 담아서 포워딩
+			request.setAttribute("article", article);
+			List<CommentVO> commentList = new CommentDAO().selectComments(articleId);
+			request.setAttribute("commentList", commentList);
+			List<FileVO> fileList = new FileDAO().selectFiles(articleId);
+			request.setAttribute("fileList", fileList);
+			request.getRequestDispatcher("viewArticle.jsp?id=" + articleId)
+					.forward(request, response);
+		} catch (ServletException | IOException e) {
+			String currentClass = MyLogger.getClassName();
+			logger.severe(currentClass+e);
+		}
+	}
+
 
 	/**
 	 * 최초 index 페이지에 요청된 경우 게시글을 받기위해 이 주소로 forward 되어 Article 전달
@@ -317,6 +329,26 @@ public class MainServlet extends HttpServlet {
 		} catch (IOException e) {
 			logger.severe("게시글 등록중 IOException 발생");
 			response.sendRedirect("/newArticleInput.jsp");
+		}
+	}
+
+	/**
+	 * 댓글을 생성(insert)하는 메서드
+	 * @param request
+	 * @param response
+	 */
+	private void postInsertComment(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String newCommentContent = request.getParameter("new_comment");
+			String onArticleId = request.getParameter("id");
+			HashMap<String, String> mapForInsertComment = new HashMap<>();
+			mapForInsertComment.put("content", newCommentContent);
+			mapForInsertComment.put("articleId", onArticleId);
+			new CommentDAO().insertComment(mapForInsertComment);
+			response.sendRedirect("/viewPost.action?id=" + onArticleId);
+		} catch (IOException e){
+			String currentClass = MyLogger.getClassName();
+			logger.severe(currentClass+e);
 		}
 	}
 }
