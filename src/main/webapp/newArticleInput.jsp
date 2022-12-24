@@ -55,17 +55,17 @@
                     <div class="filebox">
                         <input class="upload_name1" />
                         <label for="file1">파일 찾기</label>
-                        <input type="file" name="file" id="file1" />
+                        <input type="file" name="file1" id="file1" />
                     </div>
                     <div class="filebox">
                         <input class="upload_name2" />
                         <label for="file2">파일 찾기</label>
-                        <input type="file" name="file" id="file2" />
+                        <input type="file" name="file2" id="file2" />
                     </div>
                     <div class="filebox">
                         <input class="upload_name3" />
                         <label for="file3">파일 찾기</label>
-                        <input type="file" name="file" id="file3" />
+                        <input type="file" name="file3" id="file3" />
                     </div>
                 </div>
             </div>

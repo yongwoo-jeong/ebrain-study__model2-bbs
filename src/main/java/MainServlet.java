@@ -143,9 +143,9 @@ public class MainServlet extends HttpServlet {
 		try{
 			System.out.println(request.getSession());
 			// 검색 SELECT 매퍼 parameter 로 담을 Map - 카테고리, 키워드, 날짜, 페이징 숫자
-			Map selectMap = new HashMap();
+			Map selectMap = new HashMap<>();
 			// 총 검색건을 세기 위한 Map
-			Map totalSelectMap = new HashMap();
+			Map totalSelectMap = new HashMap<>();
 			// 페이징을 위한 page 파라미터값 가져오기
 			String pageNumber = request.getParameter("page");
 			// page 파라미터를 받아 정수 형태로 변환해주는 클래스 사용

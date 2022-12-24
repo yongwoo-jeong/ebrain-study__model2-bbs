@@ -11,24 +11,25 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 public class FileDAO{
-	String resource = "mybatis-config.xml";
-	SqlSessionFactory sqlSessionFactory;
-	FileMapper mapper;
 
-	public List<FileVO> selectFiles(String articleId) throws IOException {
+
+	public static FileMapper getMapper() throws IOException {
+		String resource = "mybatis-config.xml";
+		SqlSessionFactory sqlSessionFactory;
+		FileMapper mapper;
 		InputStream inputStream = Resources.getResourceAsStream(resource);
 		sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
 		SqlSession session = sqlSessionFactory.openSession();
 		mapper = session.getMapper(FileMapper.class);
-		return mapper.selectFiles(Integer.parseInt(articleId));
+		return mapper;
+	}
+
+	public List<FileVO> selectFiles(String articleId) throws IOException {
+		return getMapper().selectFiles(Integer.parseInt(articleId));
 	}
 
 	public FileVO selectForDownload(String uuid) throws IOException {
-		InputStream inputStream = Resources.getResourceAsStream(resource);
-		sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
-		SqlSession session = sqlSessionFactory.openSession();
-		mapper = session.getMapper(FileMapper.class);
-		return mapper.selectForDownload(uuid);
+		return getMapper().selectForDownload(uuid);
 	}
 
 	public void insertFile(FileVO newFile) throws IOException {
