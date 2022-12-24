@@ -18,17 +18,20 @@ public class FileDAO{
 	 * session commit, close 위한 sql 세션 멤버변수
 	 */
 	static SqlSession session;
+	/**
+	 * myLogger 인스턴스 받아오기
+	 */
 	static MyLogger logger = MyLogger.getLogger();
 	/**
-	 * 파일 관련한 매퍼를 로드해주는 메소드
+	 * fileMapper 로드해주는 메소드
 	 * @return
 	 * @throws IOException
 	 */
 	public static FileMapper loadMapper(){
 		FileMapper mapper = null;
+		String resource = "mybatis-config.xml";
+		SqlSessionFactory sqlSessionFactory;
 		try {
-			String resource = "mybatis-config.xml";
-			SqlSessionFactory sqlSessionFactory;
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 			session = sqlSessionFactory.openSession();
@@ -46,7 +49,9 @@ public class FileDAO{
 	 * @return 해당 아티클에 따른 파일들 List<FileVO> 형태로 반환
 	 */
 	public List<FileVO> selectFiles(String articleId) {
-		return loadMapper().selectFiles(Integer.parseInt(articleId));
+		List<FileVO> selectedFiles  = loadMapper().selectFiles(Integer.parseInt(articleId));
+		session.close();
+		return selectedFiles;
 	}
 
 	/**

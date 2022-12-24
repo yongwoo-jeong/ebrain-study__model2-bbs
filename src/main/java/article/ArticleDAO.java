@@ -14,52 +14,64 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
  * myBatis 매퍼들을 이용해 게시글 관련 데이터 송수신
  */
 public class ArticleDAO {
-	String resource = "mybatis-config.xml";
-	SqlSessionFactory sqlSessionFactory;
-	ArticleMapper mapper;
-	MyLogger logger = MyLogger.getLogger();
-	public List<ArticleVO> selectAllArticle(Map selectMap) {
-		try {
+	/**
+	 * session commit, close 위한 sql 세션 멤버변수
+	 */
+	static SqlSession session;
+	/**
+	 * myLogger 인스턴스 받아오기
+	 */
+	static MyLogger logger = MyLogger.getLogger();
+
+	/**
+	 * ArticleMapper 로드해주는 메서드
+	 * @return
+	 */
+	public static ArticleMapper loadMapper(){
+		ArticleMapper mapper = null;
+		String resource = "mybatis-config.xml";
+		SqlSessionFactory sqlSessionFactory;
+		try{
 			InputStream inputStream = Resources.getResourceAsStream(resource);
-			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
-			SqlSession session = sqlSessionFactory.openSession();
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			session = sqlSessionFactory.openSession();
 			mapper = session.getMapper(ArticleMapper.class);
-			List<ArticleVO> articleVOFromMapper = mapper.selectAllArticle(selectMap);
+		} catch (IOException e) {
+			String currentClass = MyLogger.getClassName();
+			logger.severe(currentClass+e);
+			e.printStackTrace();
+		}
+		return mapper;
+	}
+
+	/**
+	 * index page, 검색 조건 토대로 해당되는 아티클 인스턴스 리스트를 리턴해주는 메서드
+	 * @param selectMap 날짜, 키워드, 카테고리, 페이징 정보가 담긴 Map
+	 * @return List<ArticleVO>
+	 */
+	public List<ArticleVO> selectAllArticle(Map selectMap) {
+			List<ArticleVO> articleVOFromMapper = loadMapper().selectAllArticle(selectMap);
 			session.close();
 			return articleVOFromMapper;
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
 	}
 
+	/**
+	 * 개별 게시글 보기 페이지를 위해 게시글 인스턴스를 반환해주는 메서드
+	 * @param articleId 스트링형태로 받아 정수형태로 변환 후 매퍼 인터페이스로 전달
+	 * @return  ArticleVO
+	 */
 	public ArticleVO getArticle(String articleId){
 		int parsedArticleId = Integer.parseInt(articleId);
-		try {
-			InputStream inputStream = Resources.getResourceAsStream(resource);
-			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
-			SqlSession session = sqlSessionFactory.openSession();
-			mapper = session.getMapper(ArticleMapper.class);
-			return mapper.getArticle(parsedArticleId);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+		return loadMapper().getArticle(parsedArticleId);
 	}
 
-	public int insertArticle(ArticleVO articleVO) {
-		try {
-			InputStream inputStream = Resources.getResourceAsStream(resource);
-			sqlSessionFactory  = new SqlSessionFactoryBuilder().build(inputStream);
-			SqlSession session = sqlSessionFactory.openSession();
-			mapper = session.getMapper(ArticleMapper.class);
-			// String title, String writer,String password,Integer view, String content, Date created_at,Integer category_id
-			mapper.insertArticle(articleVO);
-			session.commit();
-			session.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return 0;
+	/**
+	 * 게시글 등록을 위한 메서드
+	 * @param articleVO
+	 */
+	public void insertArticle(ArticleVO articleVO) {
+		loadMapper().insertArticle(articleVO);
+		session.commit();
+		session.close();
 	}
 }
