@@ -11,7 +11,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 /**
- * myBatis 매퍼들을 이용해 게시글 관련 데이터 송수신
+ * myBatis 매퍼들을 이용해 게시글 관련 데이터 생성, 읽기, 수정, 삭제하는 클래스
  */
 public class ArticleDAO {
 	/**
@@ -21,13 +21,13 @@ public class ArticleDAO {
 	/**
 	 * myLogger 인스턴스 받아오기
 	 */
-	static MyLogger logger = MyLogger.getLogger();
+	MyLogger logger = MyLogger.getLogger();
 
 	/**
 	 * ArticleMapper 로드해주는 메서드
 	 * @return
 	 */
-	public static ArticleMapper loadMapper(){
+	public ArticleMapper loadMapper(){
 		ArticleMapper mapper = null;
 		String resource = "mybatis-config.xml";
 		SqlSessionFactory sqlSessionFactory;

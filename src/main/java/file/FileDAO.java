@@ -12,6 +12,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+/**
+ * 마이배티스 매퍼를 이용해 파일 관련 데이터 생성, 읽기, 삭제하는 클래스
+ */
 public class FileDAO{
 
 	/**
@@ -21,13 +24,13 @@ public class FileDAO{
 	/**
 	 * myLogger 인스턴스 받아오기
 	 */
-	static MyLogger logger = MyLogger.getLogger();
+	MyLogger logger = MyLogger.getLogger();
 	/**
 	 * fileMapper 로드해주는 메소드
 	 * @return
 	 * @throws IOException
 	 */
-	public static FileMapper loadMapper(){
+	public FileMapper loadMapper(){
 		FileMapper mapper = null;
 		String resource = "mybatis-config.xml";
 		SqlSessionFactory sqlSessionFactory;

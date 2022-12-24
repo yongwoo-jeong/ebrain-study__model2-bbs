@@ -3,6 +3,9 @@ package file;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 파일을 위한 매퍼 인터페이스
+ */
 public interface FileMapper {
 
 	/**
