@@ -25,7 +25,6 @@
   SELECT * FROM article
     WHERE article_id = '${articleId}'
   </select>
-
   <insert id="insertArticle" parameterType="article.ArticleVO" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO article ( title, writer, password, content, created_at, category_id)
       VALUES ("${title}", "${writer}", "${password}", "${content}", NOW(), ${categoryId})
@@ -33,4 +32,8 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
   </insert>
+  <delete id="deleteArticle" parameterType="int">
+    DELETE FROM article
+      WHERE article_id = ${articleId}
+  </delete>
 </mapper>

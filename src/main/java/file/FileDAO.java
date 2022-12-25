@@ -63,7 +63,9 @@ public class FileDAO{
 	 * @return FileVO 반환
 	 */
 	public FileVO selectForDownload(String uuid){
-		return loadMapper().selectForDownload(uuid);
+		FileVO downloadFile = loadMapper().selectForDownload(uuid);
+		session.close();
+		return downloadFile;
 	}
 
 	/**

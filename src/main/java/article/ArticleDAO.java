@@ -62,7 +62,9 @@ public class ArticleDAO {
 	 */
 	public ArticleVO getArticle(String articleId){
 		int parsedArticleId = Integer.parseInt(articleId);
-		return loadMapper().getArticle(parsedArticleId);
+		ArticleVO getArticle =  loadMapper().getArticle(parsedArticleId);
+		session.close();
+		return getArticle;
 	}
 
 	/**
@@ -71,6 +73,16 @@ public class ArticleDAO {
 	 */
 	public void insertArticle(ArticleVO articleVO) {
 		loadMapper().insertArticle(articleVO);
+		session.commit();
+		session.close();
+	}
+
+	/**
+	 * 게시글 삭제를 위한 메서드
+	 * @param articleId 서블릿에서 게시글 ID 스트링으로 받아온다.
+	 */
+	public void deleteArticle(String articleId){
+		loadMapper().deleteArticle(Integer.parseInt(articleId));
 		session.commit();
 		session.close();
 	}

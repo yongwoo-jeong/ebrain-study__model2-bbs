@@ -16,7 +16,7 @@ public interface ArticleMapper {
 	List<ArticleVO> selectAllArticle(Map map);
 
 	/**
-	 * article table 에 insert 위한 메서드
+	 * article table 에 insert 위한 매퍼 인터페이스
 	 * @param articleVO
 	 * @return
 	 */
@@ -28,4 +28,10 @@ public interface ArticleMapper {
 	 * @return ActicleVO
 	 */
 	ArticleVO getArticle(int articleId);
+
+	/**
+	 * 게시글을 지우는 매퍼 인터페이스
+	 * @param articleId
+	 */
+	void deleteArticle(int articleId);
 }

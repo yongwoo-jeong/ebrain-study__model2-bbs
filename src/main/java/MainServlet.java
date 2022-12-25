@@ -58,6 +58,9 @@ public class MainServlet extends HttpServlet {
 		if(uri.equals("/download.action")){
 			getFileDownload(request,response);
 		}
+		if (uri.equals("/delete.action")){
+			getDeleteArticle(request,response);
+		}
 	}
 
 	/**
@@ -231,6 +234,17 @@ public class MainServlet extends HttpServlet {
 			request.setAttribute("selectedArticles", selectedArticles);
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}catch (IOException | ServletException e){
+			logger.severe(e.toString());
+			e.printStackTrace();
+		}
+	}
+
+	public void getDeleteArticle(HttpServletRequest request, HttpServletResponse response){
+		String deleteArticleId = request.getParameter("id");
+		new ArticleDAO().deleteArticle(deleteArticleId);
+		try {
+			response.sendRedirect("/index.jsp");
+		} catch (IOException e) {
 			logger.severe(e.toString());
 			e.printStackTrace();
 		}
